@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>2026 Reading Lists Tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a library card-catalogue ledger. Header with counts, a filter bar, then one sortable table. */
+:root {
+  --bg: #f3f4f1;
+  --surface: #ffffff;
+  --ink: #1d2422;
+  --muted: #5d6a66;
+  --rule: #d9ded9;
+  --accent: #1f5e57;
+  --accent-soft: #e2eeeb;
+  --hi: #fff6d6;
+  --s-jpm: #6b4b2a; --s-mck: #1f4e86; --s-lbs: #8a1c3a; --s-hbs: #7a1f1f; --s-ft: #a35a00;
+  --font-display: "Newsreader", Georgia, "Times New Roman", serif;
+  --font-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+  color-scheme: light;
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #121615; --surface: #1a201e; --ink: #e6ebe8; --muted: #9aa8a3; --rule: #2c3532;
+    --accent: #6fc1b4; --accent-soft: #1d2f2c; --hi: #3a3418;
+    --s-jpm: #d8b48a; --s-mck: #8fb6ec; --s-lbs: #ec8aa4; --s-hbs: #f09a8a; --s-ft: #f2b765;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #121615; --surface: #1a201e; --ink: #e6ebe8; --muted: #9aa8a3; --rule: #2c3532;
+  --accent: #6fc1b4; --accent-soft: #1d2f2c; --hi: #3a3418;
+  --s-jpm: #d8b48a; --s-mck: #8fb6ec; --s-lbs: #ec8aa4; --s-hbs: #f09a8a; --s-ft: #f2b765;
+  color-scheme: dark;
+}
+html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+[hidden]:not([hidden=until-found i]) { display: none !important; }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 15px; line-height: 1.5; }
+.wrap { max-width: 1120px; margin: 0 auto; padding: 32px 20px 56px; display: grid; gap: 22px; }
+header { display: grid; gap: 8px; }
+.eyebrow { font-family: var(--font-mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+h1 { font-family: var(--font-display); font-weight: 600; font-size: clamp(28px, 4.5vw, 40px); line-height: 1.1; margin: 0; text-wrap: balance; }
+.lede { color: var(--muted); max-width: 65ch; margin: 0; }
+.stats { display: flex; flex-wrap: wrap; gap: 8px 22px; font-family: var(--font-mono); font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.stats b { color: var(--ink); font-weight: 500; }
+.controls { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.controls input, .controls select {
+  font: inherit; font-size: 14px; color: var(--ink); background: var(--surface);
+  border: 1px solid var(--rule); border-radius: 6px; padding: 8px 10px; min-width: 0;
+}
+.controls input { flex: 1 1 240px; }
+.controls select { flex: 0 1 200px; }
+.controls label.chk { display: flex; gap: 6px; align-items: center; font-size: 14px; color: var(--muted); cursor: pointer; }
+.controls button { font: inherit; font-size: 14px; background: transparent; color: var(--accent); border: 1px solid var(--accent); border-radius: 6px; padding: 8px 12px; cursor: pointer; }
+.controls button:hover { background: var(--accent-soft); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.count { font-family: var(--font-mono); font-size: 13px; color: var(--muted); }
+.table-box { overflow-x: auto; background: var(--surface); border: 1px solid var(--rule); border-radius: 8px; }
+table { width: 100%; border-collapse: collapse; min-width: 720px; }
+th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+thead th { position: sticky; top: 0; background: var(--surface); font-family: var(--font-mono); font-weight: 500; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+thead th button { all: unset; cursor: pointer; display: inline-flex; gap: 6px; align-items: center; }
+thead th button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+thead th[aria-sort="ascending"] .arr::after { content: "▲"; color: var(--accent); }
+thead th[aria-sort="descending"] .arr::after { content: "▼"; color: var(--accent); }
+thead th .arr::after { content: "↕"; opacity: .5; font-size: 11px; }
+tbody tr:hover { background: var(--accent-soft); }
+tbody tr:last-child td { border-bottom: 0; }
+td.title { font-family: var(--font-display); font-size: 16.5px; font-weight: 500; }
+td.author { color: var(--muted); }
+td.num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; text-align: center; }
+.multi { display: inline-block; min-width: 22px; padding: 1px 6px; border-radius: 10px; background: var(--hi); color: var(--ink); font-weight: 500; }
+.src { display: inline-block; font-family: var(--font-mono); font-size: 12px; font-weight: 500; padding: 2px 8px; border-radius: 4px; border: 1px solid currentColor; white-space: nowrap; }
+.src[data-s="J.P. Morgan"] { color: var(--s-jpm); }
+.src[data-s="McKinsey"] { color: var(--s-mck); }
+.src[data-s="London Business School"] { color: var(--s-lbs); }
+.src[data-s="Harvard Business School"] { color: var(--s-hbs); }
+.src[data-s="FT Business Book Shortlist"] { color: var(--s-ft); }
+.theme { font-size: 13.5px; }
+.empty { padding: 32px; text-align: center; color: var(--muted); }
+footer { color: var(--muted); font-size: 13px; display: grid; gap: 6px; max-width: 80ch; }
+footer a { color: var(--accent); }
+@media (max-width: 560px) { .controls select { flex: 1 1 100%; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Reading lists · published 2026</div>
+    <h1>2026 Reading Lists Tracker</h1>
+    <p class="lede">Every title from J.P. Morgan, McKinsey, London Business School, Harvard Business School and the FT Business Book of the Year shortlist, in one table. Click a column heading to sort.</p>
+    <div class="stats" id="stats"></div>
+  </header>
+
+  <div class="controls">
+    <input id="q" type="search" placeholder="Search title or author" aria-label="Search title or author">
+    <select id="fsrc" aria-label="Filter by source"><option value="">All sources</option></select>
+    <select id="fthm" aria-label="Filter by theme"><option value="">All themes</option></select>
+    <label class="chk"><input id="fmulti" type="checkbox"> On 2+ lists</label>
+    <button id="reset" type="button">Clear filters</button>
+    <span class="count" id="count"></span>
+  </div>
+
+  <div class="table-box">
+    <table>
+      <thead>
+        <tr>
+          <th data-k="source" aria-sort="none"><button type="button">Source <span class="arr"></span></button></th>
+          <th data-k="title" aria-sort="none"><button type="button">Title <span class="arr"></span></button></th>
+          <th data-k="author" aria-sort="none"><button type="button">Author <span class="arr"></span></button></th>
+          <th data-k="theme" aria-sort="none"><button type="button">Theme <span class="arr"></span></button></th>
+          <th data-k="lists" aria-sort="none" style="text-align:center"><button type="button">Lists <span class="arr"></span></button></th>
+        </tr>
+      </thead>
+      <tbody id="rows"></tbody>
+    </table>
+    <div class="empty" id="empty" hidden>No titles match these filters.</div>
+  </div>
+
+  <footer>
+    <div>“Lists” counts how many of these five sources include the same title. Goldman Sachs did not publish a book list in 2026; Lloyd Blankfein’s <em>Streetwise</em> appears here through the LBS list.</div>
+    <div>Sources: <a href="https://privatebank.jpmorgan.com/nam/en/about-us/the-client-experience/summer-reading-list" target="_blank" rel="noopener">J.P. Morgan</a> · <a href="https://www.mckinsey.com/featured-insights/annual-book-recommendations" target="_blank" rel="noopener">McKinsey</a> · <a href="https://www.london.edu/think/9-books-to-read-this-summer" target="_blank" rel="noopener">LBS</a> · <a href="https://www.library.hbs.edu/working-knowledge/harvard-business-school-faculty-summer-reader-2026" target="_blank" rel="noopener">HBS</a> · <a href="https://talkingbiznews.com/media-news/ft-announces-shortlist-for-business-book-of-the-year-2/" target="_blank" rel="noopener">FT shortlist</a></div>
+  </footer>
+</div>
+
+<script>
+const J="J.P. Morgan", M="McKinsey", L="London Business School", H="Harvard Business School", F="FT Business Book Shortlist";
+const AI="AI & technology", BUS="Business & leadership", FIN="Finance & economics", POL="Geopolitics & politics", HIS="History", BIO="Biography & memoir", PER="Personal development", FIC="Fiction & literature", HEA="Health & science", ART="Art & culture", SUS="Sustainability & environment", WRK="Workplace culture", SPO="Sport";
+const DATA = [
+// J.P. Morgan Summer Reading List 2026
+[J,"How Great Ideas Happen","George Newman",BUS],
+[J,"The Infinity Machine","Sebastian Mallaby",AI],
+[J,"AI for Good","Josh Tyrangiel",AI],
+[J,"America: The Imagination of a Nation","Assouline & Joel Stein",ART],
+[J,"Crisis Engineering","Marina Nitze, Matthew Weaver & Mikey Dickerson",BUS],
+[J,"The Coming Storm","Odd Arne Westad",POL],
+[J,"Mattering","Jennifer Breheny Wallace",PER],
+[J,"Coachable","Ric Bucher",SPO],
+[J,"The Stimulated Mind","Dr Tommy Wood",HEA],
+[J,"Light and Thread","Han Kang",FIC],
+[J,"Irreplaceable: 60 of Humanity's Most Treasured Places","World Monuments Fund",ART],
+[J,"Keith Haring in 3D","Larry Warsh & Glenn Adamson",ART],
+[J,"Squeeze Me: Lemon Recipes & Art","Ruthie Rogers & Ed Ruscha",ART],
+[J,"We Are the World (Cup)","Roger Bennett",SPO],
+// McKinsey 2026 annual book recommendations
+[M,"AI for Good","Josh Tyrangiel",AI],
+[M,"Birds Up Close","Lorna Gibson",AI],
+[M,"A Brief History of Intelligence","Max Bennett",AI],
+[M,"The Coming Wave","Mustafa Suleyman with Michael Bhaskar",AI],
+[M,"Human Magic","Johan Roos",AI],
+[M,"Human Raised","Dana Suskind",AI],
+[M,"I Am Not a Robot","Joanna Stern",AI],
+[M,"The Infinity Machine","Sebastian Mallaby",AI],
+[M,"Prophecy","Carissa Véliz",AI],
+[M,"Rewired","Eric Lamarre, Kate Smaje & Robert Levin",AI],
+[M,"Supremacy","Parmy Olson",AI],
+[M,"All the Beauty in the World","Patrick Bringley",BIO],
+[M,"A Beginner's Guide to Dying","Simon Boas",BIO],
+[M,"Big Fan","Michael Schur & Joe Posnanski",BIO],
+[M,"The Black Family Who Built America","Cheryl McKissack Daniel with Nick Chiles",BIO],
+[M,"Born of This Land","Chung Ju-yung",BIO],
+[M,"Daughters of the Bamboo Grove","Barbara Demick",BIO],
+[M,"A Different Kind of Power","Jacinda Ardern",BIO],
+[M,"Famesick","Lena Dunham",BIO],
+[M,"From Third World to First","Lee Kuan Yew",BIO],
+[M,"Gender Queer","Maia Kobabe",BIO],
+[M,"God, Human, Animal, Machine","Meghan O'Gieblyn",BIO],
+[M,"Making It Big","Femi Otedola",BIO],
+[M,"Nelson: A Personal History","Christopher Hibbert",BIO],
+[M,"An Odyssey: A Father, a Son, and an Epic","Daniel Mendelsohn",BIO],
+[M,"Oh My Mother!","Connie Wang",BIO],
+[M,"Raising Hare","Chloe Dalton",BIO],
+[M,"Rough Sleepers","Tracy Kidder",BIO],
+[M,"Thank You, Teachers","James Patterson & Matt Eversmann",BIO],
+[M,"What Could Possibly Go Right?","Danny Meyer",BIO],
+[M,"The Years","Annie Ernaux",BIO],
+[M,"Apple: The First 50 Years","David Pogue",BUS],
+[M,"The Art of Spending Money","Morgan Housel",BUS],
+[M,"Enshittification","Cory Doctorow",BUS],
+[M,"The Fearless Organization","Amy C. Edmondson",BUS],
+[M,"Hidden Potential","Adam Grant",BUS],
+[M,"Inside the Box","David Epstein",BUS],
+[M,"Leadership: In Turbulent Times","Doris Kearns Goodwin",BUS],
+[M,"The Listening Leader","Emilio Galli Zugaro with Clementina Galli Zugaro",BUS],
+[M,"The Origins of Efficiency","Brian Potter",BUS],
+[M,"The Tao of Fundraising","John Kim with Seth Libby",BUS],
+[M,"The Unaccountability Machine","Dan Davies",BUS],
+[M,"The Correspondent","Virginia Evans",FIC],
+[M,"Exit Party","Emily St. John Mandel",FIC],
+[M,"Foundation","Isaac Asimov",FIC],
+[M,"How to End a Love Story","Yulin Kuang",FIC],
+[M,"The Infinite Extent","Dennis E. Taylor",FIC],
+[M,"Now Then","Morgan Radford",FIC],
+[M,"Platform Decay","Martha Wells",FIC],
+[M,"Player Piano","Kurt Vonnegut",FIC],
+[M,"Something Wicked This Way Comes","Ray Bradbury",FIC],
+[M,"A Swim in a Pond in the Rain","George Saunders",FIC],
+[M,"The Things We Never Say","Elizabeth Strout",FIC],
+[M,"What We Can Know","Ian McEwan",FIC],
+[M,"The Anxious Generation","Jonathan Haidt",HEA],
+[M,"Models of the Mind","Grace Lindsay",HEA],
+[M,"The Parkinson's Plan","Ray Dorsey & Michael S. Okun",HEA],
+[M,"Replaceable You","Mary Roach",HEA],
+[M,"Up to Speed","Christine Yu",HEA],
+[M,"1929","Andrew Ross Sorkin",HIS],
+[M,"An African History of Africa","Zeinab Badawi",HIS],
+[M,"The Boundless Deep","Richard Holmes",HIS],
+[M,"The British Are Coming","Rick Atkinson",HIS],
+[M,"Endurance: Shackleton's Incredible Voyage","Alfred Lansing",HIS],
+[M,"Freedom's Forge","Arthur Herman",HIS],
+[M,"An Indigenous Peoples' History of the United States","Roxanne Dunbar-Ortiz",HIS],
+[M,"King of Kings","Scott Anderson",HIS],
+[M,"London Falling","Patrick Radden Keefe",HIS],
+[M,"The Singing Word","Walt Hunter (ed.)",HIS],
+[M,"Thinking Historically","Francis J. Gavin",HIS],
+[M,"The Warmth of Other Suns","Isabel Wilkerson",HIS],
+[M,"The 5 Types of Wealth","Sahil Bloom",PER],
+[M,"Die with Zero","Bill Perkins",PER],
+[M,"Four Thousand Weeks","Oliver Burkeman",PER],
+[M,"How to Not Know","Simone Stolzoff",PER],
+[M,"How to Start","Jodi Kantor",PER],
+[M,"Life in Three Dimensions","Shigehiro Oishi",PER],
+[M,"The Meaning of Your Life","Arthur C. Brooks",PER],
+[M,"The Surrender Experiment","Michael A. Singer",PER],
+[M,"What to Make of a Life","Jim Collins",PER],
+[M,"The Accidental Superpower: Ten Years On","Peter Zeihan",POL],
+[M,"The Avoidable War","Kevin Rudd",POL],
+[M,"Breakneck","Dan Wang",POL],
+[M,"Capitalism, Socialism, and Democracy","Joseph A. Schumpeter",POL],
+[M,"A Century of Plenty","Sven Smit, Chris Bradley, Nick Leung & Marc Canal",POL],
+[M,"Destined for War","Graham Allison",POL],
+[M,"The Invisible People","Phuthuma Nhleko",POL],
+[M,"Sovereign Funds","Zongyuan Zoe Liu",POL],
+[M,"Standing Firm for Indonesia's Democracy","Takashi Shiraishi et al. (eds.)",POL],
+[M,"Who Is the City For?","Blair Kamin",POL],
+[M,"Why Nothing Works","Marc J. Dunkelman",POL],
+[M,"The High Frontier","Gerard K. O'Neill",SUS],
+[M,"The Underworld","Susan Casey",SUS],
+[M,"The Mission Generation","Arun Gupta & Thomas J. Fewer",WRK],
+[M,"Mission Ready","Lindy Elkins-Tanton",WRK],
+[M,"The Work We Need","Hilary Cottam",WRK],
+// LBS
+[L,"How Will You Measure Your Life?","Clayton M. Christensen, James Allworth & Karen Dillon",PER],
+[L,"The Thinking Machine","Stephen Witt",AI],
+[L,"Reset: How to Change What's Not Working","Dan Heath",BUS],
+[L,"Transitions: Making Sense of Life's Changes","William Bridges",PER],
+[L,"Leonardo da Vinci","Walter Isaacson",BIO],
+[L,"The Art of Action","Stephen Bungay",BUS],
+[L,"Good People","Patmeena Sabit",FIC],
+[L,"Empire of AI","Karen Hao",AI],
+[L,"Streetwise: Getting to and Through Goldman Sachs","Lloyd Blankfein",FIN],
+// HBS
+[H,"The Correspondent","Virginia Evans",FIC],
+[H,"The Creative Act: A Way of Being","Rick Rubin",PER],
+[H,"The Maniac","Benjamín Labatut",FIC],
+[H,"A Marriage at Sea","Sophie Elmhirst",BIO],
+[H,"Bunker Hill","Nathaniel Philbrick",HIS],
+[H,"Structured Empowerment","Tatiana Sandino",BUS],
+[H,"The Volatility Machine","Michael Pettis",FIN],
+[H,"The Confidence-Man","Herman Melville",FIC],
+[H,"This Is How They Tell Me the World Ends","Nicole Perlroth",AI],
+[H,"The American Mirage","Eunji Kim",POL],
+[H,"Is a River Alive?","Robert Macfarlane",SUS],
+[H,"House of Huawei","Eva Dou",BUS],
+[H,"The Infinite Alphabet","César Hidalgo",FIN],
+[H,"Immunity to Change","Robert Kegan & Lisa Laskow Lahey",PER],
+[H,"Staying True to You","Patricia Faison Hewlin",WRK],
+[H,"Cal Hooper trilogy","Tana French",FIC],
+[H,"Democracy Awakening","Heather Cox Richardson",HIS],
+[H,"We the People","Jill Lepore",HIS],
+[H,"Democracy: A Case Study","David Moss",HIS],
+[H,"Democracy in America","Alexis de Tocqueville",POL],
+[H,"How to Rule the World","Theo Baker",BIO],
+[H,"What to Make of a Life","Jim Collins",PER],
+[H,"I Am Not a Robot","Joanna Stern",AI],
+[H,"Stoner","John Williams",FIC],
+[H,"Frog: And Other Essays","Anne Fadiman",FIC],
+// FT shortlist
+[F,"1873: The First Great Depression and the Making of the Modern World","Liaquat Ahamed",FIN],
+[F,"Off the Scales","Aimee Donnellan",BUS],
+[F,"The Infinity Machine","Sebastian Mallaby",AI],
+[F,"Project Maven","Katrina Manson",AI],
+[F,"Blood Will Flow","Alex Perry",BUS],
+[F,"Prophecy","Carissa Véliz",AI]
+];
+
+const key = t => t.split(":")[0].toLowerCase().replace(/[^a-z0-9 ]/g,"").trim();
+const srcByKey = {};
+DATA.forEach(r => { (srcByKey[key(r[1])] ||= new Set()).add(r[0]); });
+const rows = DATA.map(r => ({ source:r[0], title:r[1], author:r[2], theme:r[3], lists: srcByKey[key(r[1])].size }));
+
+const $ = id => document.getElementById(id);
+const sources = [J,M,L,H,F];
+const themes = [...new Set(rows.map(r=>r.theme))].sort();
+sources.forEach(s => $("fsrc").add(new Option(s, s)));
+themes.forEach(t => $("fthm").add(new Option(t, t)));
+
+const uniqueTitles = Object.keys(srcByKey).length;
+const multi = Object.values(srcByKey).filter(s=>s.size>1).length;
+$("stats").innerHTML = `<span><b>${rows.length}</b> entries</span><span><b>${uniqueTitles}</b> unique titles</span><span><b>${multi}</b> on 2+ lists</span><span><b>${sources.length}</b> sources</span>`;
+
+let sortK = null, sortDir = 1;
+const esc = s => s.replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+function render() {
+  const q = $("q").value.trim().toLowerCase(), fs = $("fsrc").value, ft = $("fthm").value, fm = $("fmulti").checked;
+  let out = rows.filter(r =>
+    (!q || r.title.toLowerCase().includes(q) || r.author.toLowerCase().includes(q)) &&
+    (!fs || r.source === fs) && (!ft || r.theme === ft) && (!fm || r.lists > 1));
+  if (sortK) out.sort((a,b) => {
+    const x = a[sortK], y = b[sortK];
+    return (typeof x === "number" ? x - y : x.localeCompare(y)) * sortDir || a.title.localeCompare(b.title);
+  });
+  $("rows").innerHTML = out.map(r => `<tr>
+    <td><span class="src" data-s="${esc(r.source)}">${esc(r.source)}</span></td>
+    <td class="title">${esc(r.title)}</td>
+    <td class="author">${esc(r.author)}</td>
+    <td class="theme">${esc(r.theme)}</td>
+    <td class="num">${r.lists > 1 ? `<span class="multi">${r.lists}</span>` : "1"}</td></tr>`).join("");
+  $("empty").hidden = out.length > 0;
+  $("count").textContent = `Showing ${out.length} of ${rows.length}`;
+}
+
+document.querySelectorAll("thead th").forEach(th => th.querySelector("button").addEventListener("click", () => {
+  const k = th.dataset.k;
+  if (sortK === k) sortDir = -sortDir; else { sortK = k; sortDir = k === "lists" ? -1 : 1; }
+  document.querySelectorAll("thead th").forEach(o => o.setAttribute("aria-sort", "none"));
+  th.setAttribute("aria-sort", sortDir === 1 ? "ascending" : "descending");
+  render();
+}));
+["q","fsrc","fthm","fmulti"].forEach(id => $(id).addEventListener("input", render));
+$("reset").addEventListener("click", () => { $("q").value=""; $("fsrc").value=""; $("fthm").value=""; $("fmulti").checked=false; render(); });
+render();
+</script>
+</body>
+</html>
