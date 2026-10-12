@@ -19,7 +19,7 @@
   --accent: #1f5e57;
   --accent-soft: #e2eeeb;
   --hi: #fff6d6;
-  --s-jpm: #6b4b2a; --s-mck: #1f4e86; --s-lbs: #8a1c3a; --s-hbs: #7a1f1f; --s-ft: #a35a00; --s-gn: #2f6b2a;
+  --s-jpm: #6b4b2a; --s-mck: #1f4e86; --s-lbs: #8a1c3a; --s-hbs: #7a1f1f; --s-ft: #a35a00; --s-gn: #2f6b2a; --s-lse: #5b2a86;
   --font-display: "Newsreader", Georgia, "Times New Roman", serif;
   --font-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
@@ -32,14 +32,14 @@
   :root:not([data-theme="light"]) {
     --bg: #121615; --surface: #1a201e; --ink: #e6ebe8; --muted: #9aa8a3; --rule: #2c3532;
     --accent: #6fc1b4; --accent-soft: #1d2f2c; --hi: #3a3418;
-    --s-jpm: #d8b48a; --s-mck: #8fb6ec; --s-lbs: #ec8aa4; --s-hbs: #f09a8a; --s-ft: #f2b765; --s-gn: #9bd38f;
+    --s-jpm: #d8b48a; --s-mck: #8fb6ec; --s-lbs: #ec8aa4; --s-hbs: #f09a8a; --s-ft: #f2b765; --s-gn: #9bd38f; --s-lse: #c9a3f0;
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
   --bg: #121615; --surface: #1a201e; --ink: #e6ebe8; --muted: #9aa8a3; --rule: #2c3532;
   --accent: #6fc1b4; --accent-soft: #1d2f2c; --hi: #3a3418;
-  --s-jpm: #d8b48a; --s-mck: #8fb6ec; --s-lbs: #ec8aa4; --s-hbs: #f09a8a; --s-ft: #f2b765; --s-gn: #9bd38f;
+  --s-jpm: #d8b48a; --s-mck: #8fb6ec; --s-lbs: #ec8aa4; --s-hbs: #f09a8a; --s-ft: #f2b765; --s-gn: #9bd38f; --s-lse: #c9a3f0;
   color-scheme: dark;
 }
 html { scroll-padding-top: env(safe-area-inset-top, 0px); }
@@ -89,6 +89,7 @@ td.year { font-family: var(--font-mono); font-size: 13px; font-variant-numeric: 
 .src[data-s="Harvard Business School"] { color: var(--s-hbs); }
 .src[data-s="FT Business Book Shortlist"] { color: var(--s-ft); }
 .src[data-s="Gates Notes"] { color: var(--s-gn); }
+.src[data-s="London School of Economics"] { color: var(--s-lse); }
 .theme { font-size: 13.5px; }
 .empty { padding: 32px; text-align: center; color: var(--muted); }
 footer { color: var(--muted); font-size: 13px; display: grid; gap: 6px; max-width: 80ch; }
@@ -102,7 +103,7 @@ footer b { color: var(--ink); font-weight: 500; font-family: var(--font-mono); }
   <header>
     <div class="eyebrow">Reading lists · 2024–2026</div>
     <h1>Reading Lists Tracker</h1>
-    <p class="lede">Every title from J.P. Morgan, McKinsey, London Business School, Harvard Business School, the FT Business Book of the Year shortlist and Bill Gates’s Gates Notes, from 2024 to 2026, in one table. Pick a year or see them all; click a column heading to sort.</p>
+    <p class="lede">Every title from J.P. Morgan, McKinsey, London Business School, Harvard Business School, the London School of Economics, the FT Business Book of the Year shortlist and Bill Gates’s Gates Notes, from 2024 to 2026, in one table. Pick a year or see them all; click a column heading to sort.</p>
     <div class="stats" id="stats"></div>
   </header>
 
@@ -134,13 +135,13 @@ footer b { color: var(--ink); font-weight: 500; font-family: var(--font-mono); }
   </div>
 
   <footer>
-    <div>“Lists” counts how many of the lists in the selected year (or across all three years) include the same title, so a book McKinsey recommended in both 2024 and 2025 counts twice. J.P. Morgan entries include each year’s spotlight title. Gates Notes combines Bill Gates’s summer and holiday picks into one list per year (2026 has the summer list so far); they are confirmed through press coverage because gatesnotes.com blocks automated access. Flags show each author’s nationality (hover for the country); authors whose nationality we couldn’t confirm, and organisations, have none. Goldman Sachs did not publish a book list in 2026; Lloyd Blankfein’s <em>Streetwise</em> appears here through the LBS list. The 2024 LBS picks are taken from the LBS library’s Think@LBS bookshelf, as the original article is no longer online.</div>
+    <div>“Lists” counts how many of the lists in the selected year (or across all three years) include the same title, so a book McKinsey recommended in both 2024 and 2025 counts twice. J.P. Morgan entries include each year’s spotlight title. Gates Notes combines Bill Gates’s summer and holiday picks into one list per year (2026 has the summer list so far); they are confirmed through press coverage because gatesnotes.com blocks automated access. The LSE list is the LSE Review of Books editors’ best books of 2024; LSE published no general list in 2025 or 2026. Flags show each author’s nationality (hover for the country); authors whose nationality we couldn’t confirm, and organisations, have none. Goldman Sachs did not publish a book list in 2026; Lloyd Blankfein’s <em>Streetwise</em> appears here through the LBS list. The 2024 LBS picks are taken from the LBS library’s Think@LBS bookshelf, as the original article is no longer online.</div>
     <div id="sources"></div>
   </footer>
 </div>
 
 <script>
-const J="J.P. Morgan", M="McKinsey", L="London Business School", H="Harvard Business School", F="FT Business Book Shortlist", G="Gates Notes";
+const J="J.P. Morgan", M="McKinsey", L="London Business School", H="Harvard Business School", F="FT Business Book Shortlist", G="Gates Notes", E="London School of Economics";
 const AI="AI & technology", BUS="Business & leadership", FIN="Finance & economics", POL="Geopolitics & politics", HIS="History", BIO="Biography & memoir", PER="Personal development", FIC="Fiction & literature", HEA="Health & science", ART="Art & culture", SUS="Sustainability & environment", WRK="Workplace culture", SPO="Sport";
 const LISTS = [
 // ───────────── 2026 ─────────────
@@ -606,6 +607,15 @@ const LISTS = [
   ["Character: What Contemporary Leaders Can Teach Us","Gerard Seijts & Kimberley Young Milani",BUS],
   ["The Body in the Library","Agatha Christie",FIC],
   ["Matrix","Lauren Groff",FIC]]},
+{ year: 2024, source: E, url: "https://blogs.lse.ac.uk/lsereviewofbooks/2024/12/23/eight-of-the-best-books-of-2024-recommended-by-lse-blog-editors/", books: [
+  ["The Maniac","Benjamín Labatut",FIC],
+  ["Think Again","Jacqueline Wilson",FIC],
+  ["History for Tomorrow","Roman Krznaric",HIS],
+  ["You Don't Have to Have a Dream","Tim Minchin",PER],
+  ["Intervals","Marianne Brooker",BIO],
+  ["And the Walls Became the World All Around","Johanna Ekström",BIO],
+  ["Spent Light","Lara Pawson",BIO],
+  ["Why Would Feminists Trust the Police?","Leah Cowan",POL]]},
 { year: 2024, source: F, url: "https://thebookseller.com/news/business-book-of-the-year-award-2024-shortlist-announced-by-financial-times-and-schroders", books: [
   ["Growth: A Reckoning","Daniel Susskind",FIN],
   ["Supremacy","Parmy Olson",AI],
@@ -629,9 +639,9 @@ const LISTS = [
 // Author nationality (ISO country code → author names). Authors not listed get no flag.
 const NATIONALITY = {
   us: "Abraham Verghese|Adam Grant|Adia Harvey Wingfield|Admiral James Stavridis|Aerin Lauder|Agnes Callard|Alan Eagle|Alec Nevala-Lee|Alex Ellison|Alex Hanna|Alexander C. Karp|Alfred Fortunato|Alfred Lansing|Alison A. Armstrong|Amy C. Edmondson|Amy Griffin|Andrea Freeman|Andrew Ross Sorkin|Annabelle Tometich|Anne Curzan|Anne Fadiman|Anne Lamott|Arthur C. Brooks|Arthur Herman|Avriel Epps|Barbara Demick|Barbara Kingsolver|Ben Horowitz|Bernie Banks|Betsy Wills|Beverly Gage|Bill Gifford|Bill Perkins|Blair Kamin|Bonnie Garmus|Brandon Turner|Brian Potter|Brian Rosenberg|Brianna Wiest|Cal Newport|Calley Means|Carol S. Dweck|Casey Means|Charan Ranganath|Charles Duhigg|Charles Eisenstein|Cheryl McKissack Daniel|Chris Miller|Christine Yu|Christopher Kirchhoff|Clay Risen|Clayton M. Christensen|Connie Wang|Craig Mundie|Dan Heath|Dan Slepian|Dana Suskind|Daniel Dennett|Daniel Mendelsohn|Daniel Yergin|Danny Meyer|Dave Logan|David A. Mindell|David Brooks|David Epstein|David Leonhardt|David Moss|David Pogue|David Wallace-Wells|De Kai|Derek Thompson|Don Yaeger|Donna Tartt|Doris Kearns Goodwin|Douglas Hofstadter|Ed Ruscha|Edward Fishman|Elizabeth Strout|Elliot Ackerman|Elyse Graham|Emily Lakdawalla|Emily M. Bender|Eric Klinenberg|Eric Schmidt|Erik Larson|Erin Meyer|Ethan Mollick|Eva Dou|Evan Osnos|Everett Rogers|Ezra Klein|Fareed Zakaria|Fawn Weaver|Frances Lee|Francis J. Gavin|Francisco Jiménez|Gabrielle Zevin|Gary White|George Newman|George Saunders|Gerard K. O'Neill|Glenn Adamson|Grace Lindsay|Graham Allison|Graham Moore|Greg Shaw|Gregory M. Walton|Greta Caruso|Gretchen Heefner|Halee Fischer-Wright|Hanif Abdurraqib|Harry R. Lewis|Heather Cox Richardson|Henry A. Kissinger|Henry Kissinger|Herman Melville|Herminia Ibarra|Hernan Diaz|Ian Fletcher|Ian Wardropper|Ibram X. Kendi|Isaac Asimov|Isabel Wilkerson|J. Emmett Duffy|Jake Gyllenhaal|James L. Green|James Lawrence|James Patterson|James Rhee|Jason Rezaian|Jason Roberts|Jeffrey Rosen|Jennifer Breheny Wallace|Jenny Holzer|Jens Ludwig|Jill Lepore|Jill Tracie Nichols|Jim Collins|Jimmie James|Joanna Stern|Jodi Kantor|Joe Posnanski|Joel Stein|John Bradshaw|John Doerr|John King|John Sandford|John W. O'Malley|John Williams|Jon Pessah|Jonathan Haidt|Jonathan Rosenberg|Jonathan S. Blake|Josh Tyrangiel|Joshua Robinson|Julia Galef|Justin Farrell|Karen Cyphers|Karen Dillon|Karen Hao|Katherine M. Gehl|Keach Hagey|Keisha N. Blain|Kenneth Rogoff|Kevin Evers|Kurt Strovink|Kurt Vonnegut|Larry Warsh|Laura Mae Martin|Lauren Groff|Leah Boustan|Lena Dunham|Liaquat Ahamed|Lindy Elkins-Tanton|Lisa Dickey|Lisa Laskow Lahey|Liz Moore|Lloyd Blankfein|Lydia Millet|M. K. Asante|M. Scott Peck|Maia Kobabe|Marc Fasteau|Marc J. Dunkelman|Margaret A. Weitekamp|Marie Benedict|Marina Nitze|Marshall Ganz|Martha Wells|Mary Roach|Matt Damon|Matt Eversmann|Matt Mayberry|Matthew D. LaPlante|Matthew Desmond|Matthew Weaver|Max Bennett|Meghan O'Gieblyn|Melinda French Gates|Melissa Swift|Michael A. Singer|Michael E. Porter|Michael Easter|Michael Morris|Michael Petry|Michael Pettis|Michael S. Okun|Michael Schur|Mike Colias|Mikey Dickerson|Miranda July|Monica Wood|Morgan Housel|Morgan Radford|Mónica Guzmán|Natalie Foster|Nate DiMeo|Nathaniel Philbrick|Nicholas D. Kristof|Nicholas W. Zamiska|Nick Chiles|Nicole Perlroth|Nikki Giovanni|Nils Gilman|Oprah Winfrey|Parmy Olson|Patmeena Sabit|Patricia Faison Hewlin|Patrick Bringley|Patrick Lencioni|Patrick Radden Keefe|Percival Everett|Peter Rogers|Peter Zeihan|Priya Parker|Raj M. Shah|Randall K. Wilson|Ray Bradbury|Ray Dorsey|Ray Kurzweil|Rebecca Makkai|Ric Bucher|Richard E. Spear|Rick Atkinson|Rick Rubin|Rob Manning|Robert A. Caro|Robert Kegan|Ron Chernow|Roxanne Dunbar-Ortiz|Safi Bahcall|Sahil Bloom|Salman Khan|Sandeep Jauhar|Santi Elijah Holley|Sarah Kay|Satya Nadella|Scott Adams|Scott Anderson|Scott Keller|Scott Turow|Sheila Johnson|Sherman A. Jackson|Simone Stolzoff|Sloane Crosley|Stephen Cope|Stephen Macedo|Stephen Witt|Steven G. Rogelberg|Susan Leal|Susan Rabiner|Suzy Welch|Ta-Nehisi Coates|Tara Mohr|Theo Baker|Thomas Insel|Tina Knowles|Tracy Kidder|Valerie Bauerlein|Victoria Christopher Murray|Virginia Evans|Walt Hunter|Walter Isaacson|William Bridges|William Egginton|William Ury|Xochitl Gonzalez|Yulin Kuang|Zarna Garg|Zoë Schlanger|Bruce Holsinger|Theodore H. Schwartz|Katharine Graham|Tara Westover|Shelby Van Pelt|Barry Diller|Kristin Hannah|Grady Hillhouse",
-  gb: "Adam Higginbotham|Adrian Tchaikovsky|Agatha Christie|Alex Perry|Andrew J. Scott|Chloe Dalton|Christopher Hibbert|Courtney Daniella Boateng|Dan Davies|Daniel Susskind|Dr Tommy Wood|Dr. Mandeep Rai|Elinor Cleghorn|Fay Weldon|Hallie Rubenhold|Helen Czerski|Hilary Cottam|Iain Banks|Ian McEwan|Issy von Simson|John Kay|Jonathan Clegg|Jonathan Coe|Kate Moore|Kate Smaje|Katrina Manson|Keith Thomas|Lionel Barber|Matt Haig|Matthew Parker|Matthew Walker|Melinda Stevens|Michael Bhaskar|Mustafa Suleyman|Niall Ferguson|Nick Hornby|Nigel Warburton|Oliver Burkeman|Renée Kapuku|Richard Holmes|Robert Harris|Robert Macfarlane|Roger Bennett|Roger Scruton|Ros Atkins|Samantha Harvey|Sebastian Mallaby|Simon Boas|Sophie Elmhirst|Stephen Bungay|Tabitha Joyce|Tom Fletcher|Verity Harding|Zeinab Badawi|Chris Anderson|Hannah Ritchie",
+  gb: "Adam Higginbotham|Adrian Tchaikovsky|Agatha Christie|Alex Perry|Andrew J. Scott|Chloe Dalton|Christopher Hibbert|Courtney Daniella Boateng|Dan Davies|Daniel Susskind|Dr Tommy Wood|Dr. Mandeep Rai|Elinor Cleghorn|Fay Weldon|Hallie Rubenhold|Helen Czerski|Hilary Cottam|Iain Banks|Ian McEwan|Issy von Simson|John Kay|Jonathan Clegg|Jonathan Coe|Kate Moore|Kate Smaje|Katrina Manson|Keith Thomas|Lionel Barber|Matt Haig|Matthew Parker|Matthew Walker|Melinda Stevens|Michael Bhaskar|Mustafa Suleyman|Niall Ferguson|Nick Hornby|Nigel Warburton|Oliver Burkeman|Renée Kapuku|Richard Holmes|Robert Harris|Robert Macfarlane|Roger Bennett|Roger Scruton|Ros Atkins|Samantha Harvey|Sebastian Mallaby|Simon Boas|Sophie Elmhirst|Stephen Bungay|Tabitha Joyce|Tom Fletcher|Verity Harding|Zeinab Badawi|Chris Anderson|Hannah Ritchie|Jacqueline Wilson|Marianne Brooker|Lara Pawson|Leah Cowan",
   ca: "Christopher DiCarlo|Cory Doctorow|Dan Gardner|Dan Wang|David Miller|Deb Chachra|Dennis E. Taylor|Emily St. John Mandel|Gerard Seijts|Kimberley Young Milani|Lorna Gibson|Peter Attia|Philip Sohm|Shane Parrish|Susan Casey|Steven Pinker",
-  au: "Andrew N. Liveris|David A. Sinclair|James Allworth|Kevin Rudd",
+  au: "Andrew N. Liveris|David A. Sinclair|James Allworth|Kevin Rudd|Roman Krznaric|Tim Minchin",
   nz: "Eleanor Catton|Jacinda Ardern|Sarah Wynn-Williams",
   ie: "Aimee Donnellan|Sally Rooney|Tana French|Bono",
   fr: "Alexis de Tocqueville|Annie Ernaux|Pierre Bourdieu|Victor Hugo",
@@ -641,7 +651,7 @@ const NATIONALITY = {
   at: "Joseph A. Schumpeter|Viktor E. Frankl",
   il: "Daniel Kahneman|Ilan Pappe|Yuval Noah Harari",
   nl: "Rutger Bregman|Sven Smit",
-  se: "Carl Benedikt Frey|Johan Roos",
+  se: "Carl Benedikt Frey|Johan Roos|Johanna Ekström",
   dk: "Bent Flyvbjerg",
   no: "Odd Arne Westad",
   pl: "Olga Tokarczuk",
@@ -690,8 +700,8 @@ const rows = LISTS.flatMap(l => l.books.map(([title, author, theme]) => {
 }));
 
 const $ = id => document.getElementById(id);
-const sources = [J,M,L,H,F,G];
-const SHORT = { [J]: "J.P. Morgan", [M]: "McKinsey", [L]: "LBS", [H]: "HBS", [F]: "FT shortlist", [G]: "Gates Notes" };
+const sources = [J,M,L,H,E,F,G];
+const SHORT = { [J]: "J.P. Morgan", [M]: "McKinsey", [L]: "LBS", [H]: "HBS", [E]: "LSE", [F]: "FT shortlist", [G]: "Gates Notes" };
 const years = [...new Set(LISTS.map(l => l.year))].sort((a,b) => b - a);
 const themes = [...new Set(rows.map(r=>r.theme))].sort();
 years.forEach(y => $("fyr").add(new Option(y, y)));
