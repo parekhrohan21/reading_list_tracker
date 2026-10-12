@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>2026 Reading Lists Tracker</title>
+<title>Reading Lists Tracker</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
@@ -58,13 +58,14 @@ h1 { font-family: var(--font-display); font-weight: 600; font-size: clamp(28px, 
 }
 .controls input { flex: 1 1 240px; }
 .controls select { flex: 0 1 200px; }
+.controls select#fyr { flex: 0 1 130px; }
 .controls label.chk { display: flex; gap: 6px; align-items: center; font-size: 14px; color: var(--muted); cursor: pointer; }
 .controls button { font: inherit; font-size: 14px; background: transparent; color: var(--accent); border: 1px solid var(--accent); border-radius: 6px; padding: 8px 12px; cursor: pointer; }
 .controls button:hover { background: var(--accent-soft); }
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .count { font-family: var(--font-mono); font-size: 13px; color: var(--muted); }
 .table-box { overflow-x: auto; background: var(--surface); border: 1px solid var(--rule); border-radius: 8px; }
-table { width: 100%; border-collapse: collapse; min-width: 720px; }
+table { width: 100%; border-collapse: collapse; min-width: 780px; }
 th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--rule); vertical-align: top; }
 thead th { position: sticky; top: 0; background: var(--surface); font-family: var(--font-mono); font-weight: 500; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
 thead th button { all: unset; cursor: pointer; display: inline-flex; gap: 6px; align-items: center; }
@@ -77,6 +78,7 @@ tbody tr:last-child td { border-bottom: 0; }
 td.title { font-family: var(--font-display); font-size: 16.5px; font-weight: 500; }
 td.author { color: var(--muted); }
 td.num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; text-align: center; }
+td.year { font-family: var(--font-mono); font-size: 13px; font-variant-numeric: tabular-nums; color: var(--muted); }
 .multi { display: inline-block; min-width: 22px; padding: 1px 6px; border-radius: 10px; background: var(--hi); color: var(--ink); font-weight: 500; }
 .src { display: inline-block; font-family: var(--font-mono); font-size: 12px; font-weight: 500; padding: 2px 8px; border-radius: 4px; border: 1px solid currentColor; white-space: nowrap; }
 .src[data-s="J.P. Morgan"] { color: var(--s-jpm); }
@@ -88,20 +90,22 @@ td.num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; text
 .empty { padding: 32px; text-align: center; color: var(--muted); }
 footer { color: var(--muted); font-size: 13px; display: grid; gap: 6px; max-width: 80ch; }
 footer a { color: var(--accent); }
-@media (max-width: 560px) { .controls select { flex: 1 1 100%; } }
+footer b { color: var(--ink); font-weight: 500; font-family: var(--font-mono); }
+@media (max-width: 560px) { .controls select, .controls select#fyr { flex: 1 1 100%; } }
 </style>
 </head>
 <body>
 <div class="wrap">
   <header>
-    <div class="eyebrow">Reading lists · published 2026</div>
-    <h1>2026 Reading Lists Tracker</h1>
-    <p class="lede">Every title from J.P. Morgan, McKinsey, London Business School, Harvard Business School and the FT Business Book of the Year shortlist, in one table. Click a column heading to sort.</p>
+    <div class="eyebrow">Reading lists · 2024–2026</div>
+    <h1>Reading Lists Tracker</h1>
+    <p class="lede">Every title from J.P. Morgan, McKinsey, London Business School, Harvard Business School and the FT Business Book of the Year shortlist, from 2024 to 2026, in one table. Pick a year or see them all; click a column heading to sort.</p>
     <div class="stats" id="stats"></div>
   </header>
 
   <div class="controls">
     <input id="q" type="search" placeholder="Search title or author" aria-label="Search title or author">
+    <select id="fyr" aria-label="Filter by year"><option value="">All years</option></select>
     <select id="fsrc" aria-label="Filter by source"><option value="">All sources</option></select>
     <select id="fthm" aria-label="Filter by theme"><option value="">All themes</option></select>
     <label class="chk"><input id="fmulti" type="checkbox"> On 2+ lists</label>
@@ -113,6 +117,7 @@ footer a { color: var(--accent); }
     <table>
       <thead>
         <tr>
+          <th data-k="year" aria-sort="none"><button type="button">Year <span class="arr"></span></button></th>
           <th data-k="source" aria-sort="none"><button type="button">Source <span class="arr"></span></button></th>
           <th data-k="title" aria-sort="none"><button type="button">Title <span class="arr"></span></button></th>
           <th data-k="author" aria-sort="none"><button type="button">Author <span class="arr"></span></button></th>
@@ -126,193 +131,508 @@ footer a { color: var(--accent); }
   </div>
 
   <footer>
-    <div>“Lists” counts how many of these five sources include the same title. Goldman Sachs did not publish a book list in 2026; Lloyd Blankfein’s <em>Streetwise</em> appears here through the LBS list.</div>
-    <div>Sources: <a href="https://privatebank.jpmorgan.com/nam/en/about-us/the-client-experience/summer-reading-list" target="_blank" rel="noopener">J.P. Morgan</a> · <a href="https://www.mckinsey.com/featured-insights/annual-book-recommendations" target="_blank" rel="noopener">McKinsey</a> · <a href="https://www.london.edu/think/9-books-to-read-this-summer" target="_blank" rel="noopener">LBS</a> · <a href="https://www.library.hbs.edu/working-knowledge/harvard-business-school-faculty-summer-reader-2026" target="_blank" rel="noopener">HBS</a> · <a href="https://talkingbiznews.com/media-news/ft-announces-shortlist-for-business-book-of-the-year-2/" target="_blank" rel="noopener">FT shortlist</a></div>
+    <div>“Lists” counts how many of the lists in the selected year (or across all three years) include the same title, so a book McKinsey recommended in both 2024 and 2025 counts twice. J.P. Morgan entries include each year’s spotlight title. Goldman Sachs did not publish a book list in 2026; Lloyd Blankfein’s <em>Streetwise</em> appears here through the LBS list. The 2024 LBS picks are taken from the LBS library’s Think@LBS bookshelf, as the original article is no longer online.</div>
+    <div id="sources"></div>
   </footer>
 </div>
 
 <script>
 const J="J.P. Morgan", M="McKinsey", L="London Business School", H="Harvard Business School", F="FT Business Book Shortlist";
 const AI="AI & technology", BUS="Business & leadership", FIN="Finance & economics", POL="Geopolitics & politics", HIS="History", BIO="Biography & memoir", PER="Personal development", FIC="Fiction & literature", HEA="Health & science", ART="Art & culture", SUS="Sustainability & environment", WRK="Workplace culture", SPO="Sport";
-const DATA = [
-// J.P. Morgan Summer Reading List 2026
-[J,"How Great Ideas Happen","George Newman",BUS],
-[J,"The Infinity Machine","Sebastian Mallaby",AI],
-[J,"AI for Good","Josh Tyrangiel",AI],
-[J,"America: The Imagination of a Nation","Assouline & Joel Stein",ART],
-[J,"Crisis Engineering","Marina Nitze, Matthew Weaver & Mikey Dickerson",BUS],
-[J,"The Coming Storm","Odd Arne Westad",POL],
-[J,"Mattering","Jennifer Breheny Wallace",PER],
-[J,"Coachable","Ric Bucher",SPO],
-[J,"The Stimulated Mind","Dr Tommy Wood",HEA],
-[J,"Light and Thread","Han Kang",FIC],
-[J,"Irreplaceable: 60 of Humanity's Most Treasured Places","World Monuments Fund",ART],
-[J,"Keith Haring in 3D","Larry Warsh & Glenn Adamson",ART],
-[J,"Squeeze Me: Lemon Recipes & Art","Ruthie Rogers & Ed Ruscha",ART],
-[J,"We Are the World (Cup)","Roger Bennett",SPO],
-// McKinsey 2026 annual book recommendations
-[M,"AI for Good","Josh Tyrangiel",AI],
-[M,"Birds Up Close","Lorna Gibson",AI],
-[M,"A Brief History of Intelligence","Max Bennett",AI],
-[M,"The Coming Wave","Mustafa Suleyman with Michael Bhaskar",AI],
-[M,"Human Magic","Johan Roos",AI],
-[M,"Human Raised","Dana Suskind",AI],
-[M,"I Am Not a Robot","Joanna Stern",AI],
-[M,"The Infinity Machine","Sebastian Mallaby",AI],
-[M,"Prophecy","Carissa Véliz",AI],
-[M,"Rewired","Eric Lamarre, Kate Smaje & Robert Levin",AI],
-[M,"Supremacy","Parmy Olson",AI],
-[M,"All the Beauty in the World","Patrick Bringley",BIO],
-[M,"A Beginner's Guide to Dying","Simon Boas",BIO],
-[M,"Big Fan","Michael Schur & Joe Posnanski",BIO],
-[M,"The Black Family Who Built America","Cheryl McKissack Daniel with Nick Chiles",BIO],
-[M,"Born of This Land","Chung Ju-yung",BIO],
-[M,"Daughters of the Bamboo Grove","Barbara Demick",BIO],
-[M,"A Different Kind of Power","Jacinda Ardern",BIO],
-[M,"Famesick","Lena Dunham",BIO],
-[M,"From Third World to First","Lee Kuan Yew",BIO],
-[M,"Gender Queer","Maia Kobabe",BIO],
-[M,"God, Human, Animal, Machine","Meghan O'Gieblyn",BIO],
-[M,"Making It Big","Femi Otedola",BIO],
-[M,"Nelson: A Personal History","Christopher Hibbert",BIO],
-[M,"An Odyssey: A Father, a Son, and an Epic","Daniel Mendelsohn",BIO],
-[M,"Oh My Mother!","Connie Wang",BIO],
-[M,"Raising Hare","Chloe Dalton",BIO],
-[M,"Rough Sleepers","Tracy Kidder",BIO],
-[M,"Thank You, Teachers","James Patterson & Matt Eversmann",BIO],
-[M,"What Could Possibly Go Right?","Danny Meyer",BIO],
-[M,"The Years","Annie Ernaux",BIO],
-[M,"Apple: The First 50 Years","David Pogue",BUS],
-[M,"The Art of Spending Money","Morgan Housel",BUS],
-[M,"Enshittification","Cory Doctorow",BUS],
-[M,"The Fearless Organization","Amy C. Edmondson",BUS],
-[M,"Hidden Potential","Adam Grant",BUS],
-[M,"Inside the Box","David Epstein",BUS],
-[M,"Leadership: In Turbulent Times","Doris Kearns Goodwin",BUS],
-[M,"The Listening Leader","Emilio Galli Zugaro with Clementina Galli Zugaro",BUS],
-[M,"The Origins of Efficiency","Brian Potter",BUS],
-[M,"The Tao of Fundraising","John Kim with Seth Libby",BUS],
-[M,"The Unaccountability Machine","Dan Davies",BUS],
-[M,"The Correspondent","Virginia Evans",FIC],
-[M,"Exit Party","Emily St. John Mandel",FIC],
-[M,"Foundation","Isaac Asimov",FIC],
-[M,"How to End a Love Story","Yulin Kuang",FIC],
-[M,"The Infinite Extent","Dennis E. Taylor",FIC],
-[M,"Now Then","Morgan Radford",FIC],
-[M,"Platform Decay","Martha Wells",FIC],
-[M,"Player Piano","Kurt Vonnegut",FIC],
-[M,"Something Wicked This Way Comes","Ray Bradbury",FIC],
-[M,"A Swim in a Pond in the Rain","George Saunders",FIC],
-[M,"The Things We Never Say","Elizabeth Strout",FIC],
-[M,"What We Can Know","Ian McEwan",FIC],
-[M,"The Anxious Generation","Jonathan Haidt",HEA],
-[M,"Models of the Mind","Grace Lindsay",HEA],
-[M,"The Parkinson's Plan","Ray Dorsey & Michael S. Okun",HEA],
-[M,"Replaceable You","Mary Roach",HEA],
-[M,"Up to Speed","Christine Yu",HEA],
-[M,"1929","Andrew Ross Sorkin",HIS],
-[M,"An African History of Africa","Zeinab Badawi",HIS],
-[M,"The Boundless Deep","Richard Holmes",HIS],
-[M,"The British Are Coming","Rick Atkinson",HIS],
-[M,"Endurance: Shackleton's Incredible Voyage","Alfred Lansing",HIS],
-[M,"Freedom's Forge","Arthur Herman",HIS],
-[M,"An Indigenous Peoples' History of the United States","Roxanne Dunbar-Ortiz",HIS],
-[M,"King of Kings","Scott Anderson",HIS],
-[M,"London Falling","Patrick Radden Keefe",HIS],
-[M,"The Singing Word","Walt Hunter (ed.)",HIS],
-[M,"Thinking Historically","Francis J. Gavin",HIS],
-[M,"The Warmth of Other Suns","Isabel Wilkerson",HIS],
-[M,"The 5 Types of Wealth","Sahil Bloom",PER],
-[M,"Die with Zero","Bill Perkins",PER],
-[M,"Four Thousand Weeks","Oliver Burkeman",PER],
-[M,"How to Not Know","Simone Stolzoff",PER],
-[M,"How to Start","Jodi Kantor",PER],
-[M,"Life in Three Dimensions","Shigehiro Oishi",PER],
-[M,"The Meaning of Your Life","Arthur C. Brooks",PER],
-[M,"The Surrender Experiment","Michael A. Singer",PER],
-[M,"What to Make of a Life","Jim Collins",PER],
-[M,"The Accidental Superpower: Ten Years On","Peter Zeihan",POL],
-[M,"The Avoidable War","Kevin Rudd",POL],
-[M,"Breakneck","Dan Wang",POL],
-[M,"Capitalism, Socialism, and Democracy","Joseph A. Schumpeter",POL],
-[M,"A Century of Plenty","Sven Smit, Chris Bradley, Nick Leung & Marc Canal",POL],
-[M,"Destined for War","Graham Allison",POL],
-[M,"The Invisible People","Phuthuma Nhleko",POL],
-[M,"Sovereign Funds","Zongyuan Zoe Liu",POL],
-[M,"Standing Firm for Indonesia's Democracy","Takashi Shiraishi et al. (eds.)",POL],
-[M,"Who Is the City For?","Blair Kamin",POL],
-[M,"Why Nothing Works","Marc J. Dunkelman",POL],
-[M,"The High Frontier","Gerard K. O'Neill",SUS],
-[M,"The Underworld","Susan Casey",SUS],
-[M,"The Mission Generation","Arun Gupta & Thomas J. Fewer",WRK],
-[M,"Mission Ready","Lindy Elkins-Tanton",WRK],
-[M,"The Work We Need","Hilary Cottam",WRK],
-// LBS
-[L,"How Will You Measure Your Life?","Clayton M. Christensen, James Allworth & Karen Dillon",PER],
-[L,"The Thinking Machine","Stephen Witt",AI],
-[L,"Reset: How to Change What's Not Working","Dan Heath",BUS],
-[L,"Transitions: Making Sense of Life's Changes","William Bridges",PER],
-[L,"Leonardo da Vinci","Walter Isaacson",BIO],
-[L,"The Art of Action","Stephen Bungay",BUS],
-[L,"Good People","Patmeena Sabit",FIC],
-[L,"Empire of AI","Karen Hao",AI],
-[L,"Streetwise: Getting to and Through Goldman Sachs","Lloyd Blankfein",FIN],
-// HBS
-[H,"The Correspondent","Virginia Evans",FIC],
-[H,"The Creative Act: A Way of Being","Rick Rubin",PER],
-[H,"The Maniac","Benjamín Labatut",FIC],
-[H,"A Marriage at Sea","Sophie Elmhirst",BIO],
-[H,"Bunker Hill","Nathaniel Philbrick",HIS],
-[H,"Structured Empowerment","Tatiana Sandino",BUS],
-[H,"The Volatility Machine","Michael Pettis",FIN],
-[H,"The Confidence-Man","Herman Melville",FIC],
-[H,"This Is How They Tell Me the World Ends","Nicole Perlroth",AI],
-[H,"The American Mirage","Eunji Kim",POL],
-[H,"Is a River Alive?","Robert Macfarlane",SUS],
-[H,"House of Huawei","Eva Dou",BUS],
-[H,"The Infinite Alphabet","César Hidalgo",FIN],
-[H,"Immunity to Change","Robert Kegan & Lisa Laskow Lahey",PER],
-[H,"Staying True to You","Patricia Faison Hewlin",WRK],
-[H,"Cal Hooper trilogy","Tana French",FIC],
-[H,"Democracy Awakening","Heather Cox Richardson",HIS],
-[H,"We the People","Jill Lepore",HIS],
-[H,"Democracy: A Case Study","David Moss",HIS],
-[H,"Democracy in America","Alexis de Tocqueville",POL],
-[H,"How to Rule the World","Theo Baker",BIO],
-[H,"What to Make of a Life","Jim Collins",PER],
-[H,"I Am Not a Robot","Joanna Stern",AI],
-[H,"Stoner","John Williams",FIC],
-[H,"Frog: And Other Essays","Anne Fadiman",FIC],
-// FT shortlist
-[F,"1873: The First Great Depression and the Making of the Modern World","Liaquat Ahamed",FIN],
-[F,"Off the Scales","Aimee Donnellan",BUS],
-[F,"The Infinity Machine","Sebastian Mallaby",AI],
-[F,"Project Maven","Katrina Manson",AI],
-[F,"Blood Will Flow","Alex Perry",BUS],
-[F,"Prophecy","Carissa Véliz",AI]
+const LISTS = [
+// ───────────── 2026 ─────────────
+{ year: 2026, source: J, url: "https://privatebank.jpmorgan.com/nam/en/about-us/the-client-experience/summer-reading-list", books: [
+  ["How Great Ideas Happen","George Newman",BUS],
+  ["The Infinity Machine","Sebastian Mallaby",AI],
+  ["AI for Good","Josh Tyrangiel",AI],
+  ["America: The Imagination of a Nation","Assouline & Joel Stein",ART],
+  ["Crisis Engineering","Marina Nitze, Matthew Weaver & Mikey Dickerson",BUS],
+  ["The Coming Storm","Odd Arne Westad",POL],
+  ["Mattering","Jennifer Breheny Wallace",PER],
+  ["Coachable","Ric Bucher",SPO],
+  ["The Stimulated Mind","Dr Tommy Wood",HEA],
+  ["Light and Thread","Han Kang",FIC],
+  ["Irreplaceable: 60 of Humanity's Most Treasured Places","World Monuments Fund",ART],
+  ["Keith Haring in 3D","Larry Warsh & Glenn Adamson",ART],
+  ["Squeeze Me: Lemon Recipes & Art","Ruthie Rogers & Ed Ruscha",ART],
+  ["We Are the World (Cup)","Roger Bennett",SPO]]},
+{ year: 2026, source: M, url: "https://www.mckinsey.com/featured-insights/annual-book-recommendations", books: [
+  ["AI for Good","Josh Tyrangiel",AI],
+  ["Birds Up Close","Lorna Gibson",AI],
+  ["A Brief History of Intelligence","Max Bennett",AI],
+  ["The Coming Wave","Mustafa Suleyman with Michael Bhaskar",AI],
+  ["Human Magic","Johan Roos",AI],
+  ["Human Raised","Dana Suskind",AI],
+  ["I Am Not a Robot","Joanna Stern",AI],
+  ["The Infinity Machine","Sebastian Mallaby",AI],
+  ["Prophecy","Carissa Véliz",AI],
+  ["Rewired","Eric Lamarre, Kate Smaje & Robert Levin",AI],
+  ["Supremacy","Parmy Olson",AI],
+  ["All the Beauty in the World","Patrick Bringley",BIO],
+  ["A Beginner's Guide to Dying","Simon Boas",BIO],
+  ["Big Fan","Michael Schur & Joe Posnanski",BIO],
+  ["The Black Family Who Built America","Cheryl McKissack Daniel with Nick Chiles",BIO],
+  ["Born of This Land","Chung Ju-yung",BIO],
+  ["Daughters of the Bamboo Grove","Barbara Demick",BIO],
+  ["A Different Kind of Power","Jacinda Ardern",BIO],
+  ["Famesick","Lena Dunham",BIO],
+  ["From Third World to First","Lee Kuan Yew",BIO],
+  ["Gender Queer","Maia Kobabe",BIO],
+  ["God, Human, Animal, Machine","Meghan O'Gieblyn",BIO],
+  ["Making It Big","Femi Otedola",BIO],
+  ["Nelson: A Personal History","Christopher Hibbert",BIO],
+  ["An Odyssey: A Father, a Son, and an Epic","Daniel Mendelsohn",BIO],
+  ["Oh My Mother!","Connie Wang",BIO],
+  ["Raising Hare","Chloe Dalton",BIO],
+  ["Rough Sleepers","Tracy Kidder",BIO],
+  ["Thank You, Teachers","James Patterson & Matt Eversmann",BIO],
+  ["What Could Possibly Go Right?","Danny Meyer",BIO],
+  ["The Years","Annie Ernaux",BIO],
+  ["Apple: The First 50 Years","David Pogue",BUS],
+  ["The Art of Spending Money","Morgan Housel",BUS],
+  ["Enshittification","Cory Doctorow",BUS],
+  ["The Fearless Organization","Amy C. Edmondson",BUS],
+  ["Hidden Potential","Adam Grant",BUS],
+  ["Inside the Box","David Epstein",BUS],
+  ["Leadership: In Turbulent Times","Doris Kearns Goodwin",BUS],
+  ["The Listening Leader","Emilio Galli Zugaro with Clementina Galli Zugaro",BUS],
+  ["The Origins of Efficiency","Brian Potter",BUS],
+  ["The Tao of Fundraising","John Kim with Seth Libby",BUS],
+  ["The Unaccountability Machine","Dan Davies",BUS],
+  ["The Correspondent","Virginia Evans",FIC],
+  ["Exit Party","Emily St. John Mandel",FIC],
+  ["Foundation","Isaac Asimov",FIC],
+  ["How to End a Love Story","Yulin Kuang",FIC],
+  ["The Infinite Extent","Dennis E. Taylor",FIC],
+  ["Now Then","Morgan Radford",FIC],
+  ["Platform Decay","Martha Wells",FIC],
+  ["Player Piano","Kurt Vonnegut",FIC],
+  ["Something Wicked This Way Comes","Ray Bradbury",FIC],
+  ["A Swim in a Pond in the Rain","George Saunders",FIC],
+  ["The Things We Never Say","Elizabeth Strout",FIC],
+  ["What We Can Know","Ian McEwan",FIC],
+  ["The Anxious Generation","Jonathan Haidt",HEA],
+  ["Models of the Mind","Grace Lindsay",HEA],
+  ["The Parkinson's Plan","Ray Dorsey & Michael S. Okun",HEA],
+  ["Replaceable You","Mary Roach",HEA],
+  ["Up to Speed","Christine Yu",HEA],
+  ["1929","Andrew Ross Sorkin",HIS],
+  ["An African History of Africa","Zeinab Badawi",HIS],
+  ["The Boundless Deep","Richard Holmes",HIS],
+  ["The British Are Coming","Rick Atkinson",HIS],
+  ["Endurance: Shackleton's Incredible Voyage","Alfred Lansing",HIS],
+  ["Freedom's Forge","Arthur Herman",HIS],
+  ["An Indigenous Peoples' History of the United States","Roxanne Dunbar-Ortiz",HIS],
+  ["King of Kings","Scott Anderson",HIS],
+  ["London Falling","Patrick Radden Keefe",HIS],
+  ["The Singing Word","Walt Hunter (ed.)",HIS],
+  ["Thinking Historically","Francis J. Gavin",HIS],
+  ["The Warmth of Other Suns","Isabel Wilkerson",HIS],
+  ["The 5 Types of Wealth","Sahil Bloom",PER],
+  ["Die with Zero","Bill Perkins",PER],
+  ["Four Thousand Weeks","Oliver Burkeman",PER],
+  ["How to Not Know","Simone Stolzoff",PER],
+  ["How to Start","Jodi Kantor",PER],
+  ["Life in Three Dimensions","Shigehiro Oishi",PER],
+  ["The Meaning of Your Life","Arthur C. Brooks",PER],
+  ["The Surrender Experiment","Michael A. Singer",PER],
+  ["What to Make of a Life","Jim Collins",PER],
+  ["The Accidental Superpower: Ten Years On","Peter Zeihan",POL],
+  ["The Avoidable War","Kevin Rudd",POL],
+  ["Breakneck","Dan Wang",POL],
+  ["Capitalism, Socialism, and Democracy","Joseph A. Schumpeter",POL],
+  ["A Century of Plenty","Sven Smit, Chris Bradley, Nick Leung & Marc Canal",POL],
+  ["Destined for War","Graham Allison",POL],
+  ["The Invisible People","Phuthuma Nhleko",POL],
+  ["Sovereign Funds","Zongyuan Zoe Liu",POL],
+  ["Standing Firm for Indonesia's Democracy","Takashi Shiraishi et al. (eds.)",POL],
+  ["Who Is the City For?","Blair Kamin",POL],
+  ["Why Nothing Works","Marc J. Dunkelman",POL],
+  ["The High Frontier","Gerard K. O'Neill",SUS],
+  ["The Underworld","Susan Casey",SUS],
+  ["The Mission Generation","Arun Gupta & Thomas J. Fewer",WRK],
+  ["Mission Ready","Lindy Elkins-Tanton",WRK],
+  ["The Work We Need","Hilary Cottam",WRK]]},
+{ year: 2026, source: L, url: "https://www.london.edu/think/9-books-to-read-this-summer", books: [
+  ["How Will You Measure Your Life?","Clayton M. Christensen, James Allworth & Karen Dillon",PER],
+  ["The Thinking Machine","Stephen Witt",AI],
+  ["Reset: How to Change What's Not Working","Dan Heath",BUS],
+  ["Transitions: Making Sense of Life's Changes","William Bridges",PER],
+  ["Leonardo da Vinci","Walter Isaacson",BIO],
+  ["The Art of Action","Stephen Bungay",BUS],
+  ["Good People","Patmeena Sabit",FIC],
+  ["Empire of AI","Karen Hao",AI],
+  ["Streetwise: Getting to and Through Goldman Sachs","Lloyd Blankfein",FIN]]},
+{ year: 2026, source: H, url: "https://www.library.hbs.edu/working-knowledge/harvard-business-school-faculty-summer-reader-2026", books: [
+  ["The Correspondent","Virginia Evans",FIC],
+  ["The Creative Act: A Way of Being","Rick Rubin",PER],
+  ["The Maniac","Benjamín Labatut",FIC],
+  ["A Marriage at Sea","Sophie Elmhirst",BIO],
+  ["Bunker Hill","Nathaniel Philbrick",HIS],
+  ["Structured Empowerment","Tatiana Sandino",BUS],
+  ["The Volatility Machine","Michael Pettis",FIN],
+  ["The Confidence-Man","Herman Melville",FIC],
+  ["This Is How They Tell Me the World Ends","Nicole Perlroth",AI],
+  ["The American Mirage","Eunji Kim",POL],
+  ["Is a River Alive?","Robert Macfarlane",SUS],
+  ["House of Huawei","Eva Dou",BUS],
+  ["The Infinite Alphabet","César Hidalgo",FIN],
+  ["Immunity to Change","Robert Kegan & Lisa Laskow Lahey",PER],
+  ["Staying True to You","Patricia Faison Hewlin",WRK],
+  ["Cal Hooper trilogy","Tana French",FIC],
+  ["Democracy Awakening","Heather Cox Richardson",HIS],
+  ["We the People","Jill Lepore",HIS],
+  ["Democracy: A Case Study","David Moss",HIS],
+  ["Democracy in America","Alexis de Tocqueville",POL],
+  ["How to Rule the World","Theo Baker",BIO],
+  ["What to Make of a Life","Jim Collins",PER],
+  ["I Am Not a Robot","Joanna Stern",AI],
+  ["Stoner","John Williams",FIC],
+  ["Frog: And Other Essays","Anne Fadiman",FIC]]},
+{ year: 2026, source: F, url: "https://talkingbiznews.com/media-news/ft-announces-shortlist-for-business-book-of-the-year-2/", books: [
+  ["1873: The First Great Depression and the Making of the Modern World","Liaquat Ahamed",FIN],
+  ["Off the Scales","Aimee Donnellan",BUS],
+  ["The Infinity Machine","Sebastian Mallaby",AI],
+  ["Project Maven","Katrina Manson",AI],
+  ["Blood Will Flow","Alex Perry",BUS],
+  ["Prophecy","Carissa Véliz",AI]]},
+
+// ───────────── 2025 ─────────────
+{ year: 2025, source: J, url: "https://www.jpmorgan.com/about-us/corporate-news/2025/jp-morgan-presents-its-most-expansive-summer-reading-list-to-date", books: [
+  ["Life in Three Dimensions","Shigehiro Oishi",PER],
+  ["Becoming You","Suzy Welch",PER],
+  ["Reset: How to Change What's Not Working","Dan Heath",BUS],
+  ["The Next Day: Transitions, Change, and Moving Forward","Melinda French Gates",BIO],
+  ["Iron Hope","James Lawrence",PER],
+  ["The Tell","Amy Griffin",BIO],
+  ["Coming of Age: How Technology and Entrepreneurship Are Changing the Face of MENA","Noor Sweid",BUS],
+  ["The Technological Republic","Alexander C. Karp & Nicholas W. Zamiska",POL],
+  ["Inevitable: Inside the Messy, Unstoppable Transition to Electric Vehicles","Mike Colias",BUS],
+  ["Raising AI","De Kai",AI],
+  ["MirrorMirror: The Reflective Surface in Contemporary Art","Michael Petry",ART],
+  ["The Fricks Collect","Ian Wardropper",ART],
+  ["Mars: Photographs from the NASA Archives","Nikki Giovanni, James L. Green, Emily Lakdawalla, Rob Manning & Margaret A. Weitekamp",ART],
+  ["Living with Flowers","Aerin Lauder",ART],
+  ["The Values Compass","Dr. Mandeep Rai",PER],
+  ["Our Dollar, Your Problem","Kenneth Rogoff",FIN]]},
+{ year: 2025, source: M, url: "https://www.mckinsey.com/featured-insights/annual-book-recommendations-2025", books: [
+  ["The AI Con","Emily M. Bender & Alex Hanna",AI],
+  ["Building a God","Christopher DiCarlo",AI],
+  ["Genesis: Artificial Intelligence, Hope, and the Human Spirit","Henry A. Kissinger, Craig Mundie & Eric Schmidt",AI],
+  ["A Kids Book About AI Bias","Avriel Epps",AI],
+  ["The Optimist: Sam Altman, OpenAI, and the Race to Invent the Future","Keach Hagey",AI],
+  ["The Thinking Machine","Stephen Witt",AI],
+  ["The Circuit: Stories from the Life of a Migrant Child","Francisco Jiménez",BIO],
+  ["The Devil at His Elbow","Valerie Bauerlein",BIO],
+  ["G-Man: J. Edgar Hoover and the Making of the American Century","Beverly Gage",BIO],
+  ["How to Say Babylon","Safiya Sinclair",BIO],
+  ["The Mango Tree","Annabelle Tometich",BIO],
+  ["Mark Twain","Ron Chernow",BIO],
+  ["Matriarch","Tina Knowles",BIO],
+  ["Patriot","Alexei Navalny",BIO],
+  ["Red Scare","Clay Risen",BIO],
+  ["The Rigor of Angels","William Egginton",BIO],
+  ["The Sing Sing Files","Dan Slepian",BIO],
+  ["This American Woman","Zarna Garg",BIO],
+  ["Titan: The Life of John D. Rockefeller, Sr.","Ron Chernow",BIO],
+  ["The Book on Rental Property Investing","Brandon Turner",FIN],
+  ["A CEO for All Seasons","Carolyn Dewar, Kurt Strovink, Scott Keller & Vikram Malhotra",BUS],
+  ["Inevitable: Inside the Messy, Unstoppable Transition to Electric Vehicles","Mike Colias",BUS],
+  ["Leading Through Disruption","Andrew N. Liveris",BUS],
+  ["The New Lunar Society","David A. Mindell",BUS],
+  ["Our Dollar, Your Problem","Kenneth Rogoff",FIN],
+  ["The Psychology of Money","Morgan Housel",FIN],
+  ["Range: Why Generalists Triumph in a Specialized World","David Epstein",BUS],
+  ["Red Helicopter","James Rhee",BUS],
+  ["There's Nothing Like This: The Strategic Genius of Taylor Swift","Kevin Evers",BUS],
+  ["The Unaccountability Machine","Dan Davies",BUS],
+  ["The Alchemist","Paulo Coelho",FIC],
+  ["All Fours","Miranda July",FIC],
+  ["Children of Time","Adrian Tchaikovsky",FIC],
+  ["The Culture series","Iain Banks",FIC],
+  ["Danishmand","Ahmed Fal al-Din",FIC],
+  ["Dinosaurs","Lydia Millet",FIC],
+  ["The God of the Woods","Liz Moore",FIC],
+  ["Hadji Murat","Leo Tolstoy",FIC],
+  ["James","Percival Everett",FIC],
+  ["Les Misérables","Victor Hugo",FIC],
+  ["The Life Impossible","Matt Haig",FIC],
+  ["The Maniac","Benjamín Labatut",FIC],
+  ["Olga Dies Dreaming","Xochitl Gonzalez",FIC],
+  ["Orbital","Samantha Harvey",FIC],
+  ["The Personal Librarian","Marie Benedict & Victoria Christopher Murray",FIC],
+  ["Precipice","Robert Harris",FIC],
+  ["Presumed Guilty","Scott Turow",FIC],
+  ["Trust","Hernan Diaz",FIC],
+  ["The Anxious Generation","Jonathan Haidt",HEA],
+  ["Why We Sleep","Matthew Walker",HEA],
+  ["Book and Dagger","Elyse Graham",HIS],
+  ["Challenger: A True Story of Heroism and Disaster on the Edge of Space","Adam Higginbotham",HIS],
+  ["The Demon of Unrest","Erik Larson",HIS],
+  ["The First Jesuits","John W. O'Malley",HIS],
+  ["The Islamic Secular","Sherman A. Jackson",HIS],
+  ["Land Between the Rivers: A 5,000-Year History of Iraq","Bartle Bull",HIS],
+  ["A Little History of Philosophy","Nigel Warburton",HIS],
+  ["The Memory Palace: True Short Stories of the Past","Nate DiMeo",HIS],
+  ["A Place Called Yellowstone","Randall K. Wilson",HIS],
+  ["The Power Broker: Robert Moses and the Fall of New York","Robert A. Caro",HIS],
+  ["Sand, Snow, and Stardust","Gretchen Heefner",HIS],
+  ["Unforgiving Places: The Unexpected Origins of American Gun Violence","Jens Ludwig",HIS],
+  ["The World of the Cold War: 1945–1991","Vladislav Zubok",HIS],
+  ["101 Essays That Will Change the Way You Think","Brianna Wiest",PER],
+  ["Clear Thinking","Shane Parrish",PER],
+  ["How Will You Measure Your Life?","Clayton M. Christensen, James Allworth & Karen Dillon",PER],
+  ["A Little Daylight Left","Sarah Kay",PER],
+  ["Moral Ambition","Rutger Bregman",PER],
+  ["Ordinary Magic","Gregory M. Walton",PER],
+  ["The Queen's Code","Alison A. Armstrong",PER],
+  ["The Road Less Traveled","M. Scott Peck",PER],
+  ["Scarcity Brain","Michael Easter",PER],
+  ["Thinking, Fast and Slow","Daniel Kahneman",PER],
+  ["Your Hidden Genius","Betsy Wills & Alex Ellison",PER],
+  ["Abundance","Ezra Klein & Derek Thompson",POL],
+  ["The Biggest Prison on Earth: A History of Gaza and the Occupied Territories","Ilan Pappe",POL],
+  ["The Guarantee: Inside the Fight for America's Next Economy","Natalie Foster",POL],
+  ["The Haves and Have-Yachts","Evan Osnos",POL],
+  ["I Never Thought of It That Way","Mónica Guzmán",POL],
+  ["In Covid's Wake: How Our Politics Failed Us","Stephen Macedo & Frances Lee",POL],
+  ["Industrial Policy for the United States","Marc Fasteau & Ian Fletcher",POL],
+  ["The Message","Ta-Nehisi Coates",POL],
+  ["People, Power, Change","Marshall Ganz",POL],
+  ["Poverty, by America","Matthew Desmond",POL],
+  ["Ruin Their Crops on the Ground","Andrea Freeman",POL],
+  ["Some People Need Killing","Patricia Evangelista",POL],
+  ["Why Nothing Works","Marc J. Dunkelman",POL],
+  ["Every Living Thing","Jason Roberts",SUS],
+  ["The Light Eaters","Zoë Schlanger",SUS],
+  ["Careless People","Sarah Wynn-Williams",WRK],
+  ["The Culture Map","Erin Meyer",WRK],
+  ["Death by Meeting","Patrick Lencioni",WRK]]},
+{ year: 2025, source: L, url: "https://www.london.edu/think/five-books-to-read-this-summer", books: [
+  ["Careless People","Sarah Wynn-Williams",WRK],
+  ["Intermezzo","Sally Rooney",FIC],
+  ["Gambling Man: The Wild Ride of Japan's Masayoshi Son","Lionel Barber",BIO],
+  ["The Ascent of Money","Niall Ferguson",FIN],
+  ["Distinction: A Social Critique of the Judgement of Taste","Pierre Bourdieu",ART]]},
+{ year: 2025, source: H, url: "https://www.library.hbs.edu/working-knowledge/harvard-business-school-faculty-summer-reader-2025", books: [
+  ["Ocean Ecology: Marine Life in the Age of Humans","J. Emmett Duffy",SUS],
+  ["Avian Architecture","Peter Goodfellow",HEA],
+  ["Streams of Gold: America's Untold Story of Immigrant Success","Ran Abramitzky & Leah Boustan",HIS],
+  ["Co-Intelligence","Ethan Mollick",AI],
+  ["Sacred Economics","Charles Eisenstein",FIN],
+  ["Empire of AI","Karen Hao",AI],
+  ["Exit Wounds","Peter Godwin",BIO],
+  ["When a Crocodile Eats the Sun","Peter Godwin",BIO],
+  ["Cutting for Stone","Abraham Verghese",FIC],
+  ["Bad Nature","Ariel Courage",FIC],
+  ["AI 2041: Ten Visions for Our Future","Kai-Fu Lee & Chen Qiufan",AI],
+  ["Open Socrates: The Case for a Philosophical Life","Agnes Callard",PER],
+  ["The Last Days of Night","Graham Moore",FIC],
+  ["Billionaire Wilderness","Justin Farrell",SUS],
+  ["James","Percival Everett",FIC],
+  ["How to Read a Book","Monica Wood",FIC],
+  ["Fates and Furies","Lauren Groff",FIC],
+  ["Lethal Prey","John Sandford",FIC],
+  ["The New Science of Momentum","Don Yaeger, Bernie Banks & Karen Cyphers",BUS],
+  ["Unleash Your Transformation","Marcos van Kalleveen & Peter Koijen",BUS],
+  ["Diffusion of Innovations","Everett Rogers",BUS],
+  ["Healing","Thomas Insel",HEA],
+  ["The Mind's I","Douglas Hofstadter & Daniel Dennett",HEA]]},
+{ year: 2025, source: F, url: "https://www.shelf-awareness.com/theshelf/2025-09-25/awards:_financial_times_and_schroders_business_book_shortlist.html", books: [
+  ["House of Huawei","Eva Dou",BUS],
+  ["Chokepoints","Edward Fishman",POL],
+  ["How Progress Ends","Carl Benedikt Frey",FIN],
+  ["Abundance","Ezra Klein & Derek Thompson",POL],
+  ["Breakneck","Dan Wang",POL],
+  ["The Thinking Machine","Stephen Witt",AI]]},
+
+// ───────────── 2024 ─────────────
+{ year: 2024, source: J, url: "https://www.jpmorgan.com/about-us/corporate-news/2024/jpmorgan-announces-25th-annual-summer-reading-list", books: [
+  ["Supercommunicators","Charles Duhigg",PER],
+  ["The Anxious Generation","Jonathan Haidt",HEA],
+  ["Giants: Art from the Dean Collection of Swizz Beatz and Alicia Keys","Phaidon",ART],
+  ["Brave New Words","Salman Khan",AI],
+  ["Love & Whiskey","Fawn Weaver",BUS],
+  ["The Formula: How Rogues, Geniuses, and Speed Freaks Reengineered F1","Joshua Robinson & Jonathan Clegg",SPO],
+  ["Secret Stays: Pioneering Hosts of the New Chic","Melinda Stevens, Issy von Simson & Tabitha Joyce",ART],
+  ["Finding Fortunato","Adam Pearson",BUS],
+  ["Uptime","Laura Mae Martin",PER],
+  ["The Secret Society of Aunts & Uncles","Jake Gyllenhaal & Greta Caruso",FIC],
+  ["The Worth of Water","Gary White & Matt Damon",SUS]]},
+{ year: 2024, source: M, url: "https://www.mckinsey.com/featured-insights/annual-book-recommendations-2024", books: [
+  ["An Amerikan Family: The Shakurs and the Nation They Created","Santi Elijah Holley",BIO],
+  ["Chasing Hope: A Reporter's Life","Nicholas D. Kristof",BIO],
+  ["The Code Breaker","Walter Isaacson",BIO],
+  ["Fever Pitch","Nick Hornby",BIO],
+  ["Grief Is for People","Sloane Crosley",BIO],
+  ["Nephew: A Memoir in 4-Part Harmony","M. K. Asante",BIO],
+  ["Playing from the Rough","Jimmie James",BIO],
+  ["The Rigor of Angels","William Egginton",BIO],
+  ["Trace","Jenny Holzer",BIO],
+  ["Walk Through Fire","Sheila Johnson with Lisa Dickey",BIO],
+  ["Design Social Change","Lesley-Ann Noel",BUS],
+  ["The Formula: How Rogues, Geniuses, and Speed Freaks Reengineered F1","Joshua Robinson & Jonathan Clegg",BUS],
+  ["Inner Drive: From Underdog to Global Company","Arsen Tomsky",BUS],
+  ["The Journey of Leadership","Dana Maor, Hans-Werner Kaas, Kurt Strovink & Ramesh Srinivasan",BUS],
+  ["How Legendary Leaders Speak","Peter D. Andrei",BUS],
+  ["Possible: How We Survive (and Thrive) in an Age of Conflict","William Ury",BUS],
+  ["Trillion Dollar Coach","Eric Schmidt, Jonathan Rosenberg & Alan Eagle",BUS],
+  ["What I Learned About Investing from Darwin","Pulak Prasad",FIN],
+  ["What Went Wrong with Capitalism","Ruchir Sharma",FIN],
+  ["2054","Elliot Ackerman & Admiral James Stavridis",FIC],
+  ["The Assassin","Tom Fletcher",FIC],
+  ["Birnam Wood","Eleanor Catton",FIC],
+  ["The Books of Jacob","Olga Tokarczuk",FIC],
+  ["Bournville","Jonathan Coe",FIC],
+  ["Demon Copperhead","Barbara Kingsolver",FIC],
+  ["Fathers and Sons","Ivan Turgenev",FIC],
+  ["God's Debris","Scott Adams",FIC],
+  ["I Have Some Questions for You","Rebecca Makkai",FIC],
+  ["The Island of Missing Trees","Elif Shafak",FIC],
+  ["James","Percival Everett",FIC],
+  ["Letters to Alice: On First Reading Jane Austen","Fay Weldon",FIC],
+  ["The Maniac","Benjamín Labatut",FIC],
+  ["The Meursault Investigation","Kamel Daoud",FIC],
+  ["Tomorrow, and Tomorrow, and Tomorrow","Gabrielle Zevin",FIC],
+  ["The Wizard of the Kremlin","Giuliano da Empoli",FIC],
+  ["The Anxious Generation","Jonathan Haidt",HEA],
+  ["Good Energy","Casey Means with Calley Means",HEA],
+  ["My Father's Brain: Life in the Shadow of Alzheimer's","Sandeep Jauhar",HEA],
+  ["Lifespan: Why We Age—and Why We Don't Have To","David A. Sinclair with Matthew D. LaPlante",HEA],
+  ["Outlive: The Science & Art of Longevity","Peter Attia with Bill Gifford",HEA],
+  ["Unwell Women","Elinor Cleghorn",HEA],
+  ["Why We Remember","Charan Ranganath",HEA],
+  ["Culture: The Story of Us, from Cave Art to K-Pop","Martin Puchner",HIS],
+  ["Eyeliner: A Cultural History","Zahra Hankir",HIS],
+  ["The Five: The Untold Lives of the Women Killed by Jack the Ripper","Hallie Rubenhold",HIS],
+  ["The Game: Inside the Secret World of Major League Baseball's Power Brokers","Jon Pessah",HIS],
+  ["One Fine Day: Britain's Empire on the Brink","Matthew Parker",HIS],
+  ["Painting for Profit","Richard E. Spear & Philip Sohm",HIS],
+  ["The Prize: The Epic Quest for Oil, Money & Power","Daniel Yergin",HIS],
+  ["The Radium Girls","Kate Moore",HIS],
+  ["Religion and the Decline of Magic","Keith Thomas",HIS],
+  ["An Unfinished Love Story: A Personal History of the 1960s","Doris Kearns Goodwin",HIS],
+  ["Anatomy of a Breakthrough","Adam Alter",PER],
+  ["The Art of Explanation","Ros Atkins",PER],
+  ["The Art of Gathering","Priya Parker",PER],
+  ["Der Kreativitäts-Code (The Creativity Code)","Josef Brunner & Christian Sellmann",PER],
+  ["Don't Believe Everything You Think","Joseph Nguyen",PER],
+  ["Homecoming: Reclaiming and Healing Your Inner Child","John Bradshaw",PER],
+  ["How Big Things Get Done","Bent Flyvbjerg & Dan Gardner",PER],
+  ["Man's Search for Meaning","Viktor E. Frankl",PER],
+  ["Mindset: The New Psychology of Success","Carol S. Dweck",PER],
+  ["Playing Big","Tara Mohr",PER],
+  ["Says Who? A Kinder, Funner Usage Guide","Anne Curzan",PER],
+  ["Slow Productivity","Cal Newport",PER],
+  ["Somehow: Thoughts on Love","Anne Lamott",PER],
+  ["To My Sisters: A Guide to Building Lifelong Friendships","Renée Kapuku & Courtney Daniella Boateng",PER],
+  ["What I Know for Sure","Oprah Winfrey",PER],
+  ["Age of Revolutions: Progress and Backlash from 1600 to the Present","Fareed Zakaria",POL],
+  ["Eat the Buddha: Life and Death in a Tibetan Town","Barbara Demick",POL],
+  ["How Infrastructure Works","Deb Chachra",POL],
+  ["Leadership: Six Studies in World Strategy","Henry Kissinger",POL],
+  ["Ours Was the Shining Future: The Story of the American Dream","David Leonhardt",POL],
+  ["The Politics Industry","Katherine M. Gehl & Michael E. Porter",POL],
+  ["Prisoner: My 544 Days in an Iranian Prison","Jason Rezaian",POL],
+  ["'Whatever It Is, I'm Against It': Resistance to Change in Higher Education","Brian Rosenberg",POL],
+  ["Blue Machine: How the Ocean Shapes Our World","Helen Czerski",SUS],
+  ["Children of a Modest Star","Jonathan S. Blake & Nils Gilman",SUS],
+  ["The Uninhabitable Earth","David Wallace-Wells",SUS],
+  ["AI Needs You","Verity Harding",AI],
+  ["Chip War: The Fight for the World's Most Critical Technology","Chris Miller",AI],
+  ["Co-Intelligence","Ethan Mollick",AI],
+  ["The Coming Wave","Mustafa Suleyman with Michael Bhaskar",AI],
+  ["God, Human, Animal, Machine","Meghan O'Gieblyn",AI],
+  ["Hit Refresh","Satya Nadella, Greg Shaw & Jill Tracie Nichols",AI],
+  ["Ideas That Created the Future: Classic Papers of Computer Science","Harry R. Lewis (ed.)",AI],
+  ["Inventor of the Future: The Visionary Life of Buckminster Fuller","Alec Nevala-Lee",AI],
+  ["The Singularity Is Nearer","Ray Kurzweil",AI],
+  ["The Case for Good Jobs","Zeynep Ton",WRK],
+  ["Culture Is the Way","Matt Mayberry",WRK],
+  ["Loonshots","Safi Bahcall",WRK],
+  ["The Surprising Science of Meetings","Steven G. Rogelberg",WRK],
+  ["Tribal Leadership","Dave Logan, John King & Halee Fischer-Wright",WRK],
+  ["What You Do Is Who You Are","Ben Horowitz",WRK],
+  ["Work Here Now","Melissa Swift",WRK]]},
+{ year: 2024, source: L, url: "https://library.london.edu/think/Aug24", books: [
+  ["Gray Areas","Adia Harvey Wingfield",WRK],
+  ["The Scout Mindset","Julia Galef",PER],
+  ["Chip War: The Fight for the World's Most Critical Technology","Chris Miller",AI],
+  ["The Righteous Mind","Jonathan Haidt",POL]]},
+{ year: 2024, source: H, url: "https://www.library.hbs.edu/working-knowledge/harvard-business-school-faculty-summer-reader-2024", books: [
+  ["Four Hundred Souls: A Community History of African America, 1619–2019","Ibram X. Kendi & Keisha N. Blain (eds.)",HIS],
+  ["Sapiens","Yuval Noah Harari",HIS],
+  ["Homo Deus","Yuval Noah Harari",HIS],
+  ["21 Lessons for the 21st Century","Yuval Noah Harari",POL],
+  ["Lessons in Chemistry","Bonnie Garmus",FIC],
+  ["The Goldfinch","Donna Tartt",FIC],
+  ["Thinking Like Your Editor","Susan Rabiner & Alfred Fortunato",PER],
+  ["How to Know a Person","David Brooks",PER],
+  ["The Pursuit of Happiness","Jeffrey Rosen",HIS],
+  ["Confessions of a Heretic","Roger Scruton",ART],
+  ["The Tibetan Book of Living and Dying","Sogyal Rinpoche",PER],
+  ["Speed & Scale: An Action Plan for Solving Our Climate Crisis Now","John Doerr",SUS],
+  ["The Power Broker: Robert Moses and the Fall of New York","Robert A. Caro",HIS],
+  ["Solved: How the World's Great Cities Are Fixing the Climate Crisis","David Miller",SUS],
+  ["2020: One City, Seven People, and the Year Everything Changed","Eric Klinenberg",HIS],
+  ["Heat Wave","Eric Klinenberg",SUS],
+  ["The Battle for Yellowstone","Justin Farrell",SUS],
+  ["Billionaire Wilderness","Justin Farrell",SUS],
+  ["Running Out of Water","Peter Rogers & Susan Leal",SUS],
+  ["Working Identity","Herminia Ibarra",WRK],
+  ["They Can't Kill Us Until They Kill Us","Hanif Abdurraqib",ART],
+  ["Go Ahead in the Rain: Notes to A Tribe Called Quest","Hanif Abdurraqib",ART],
+  ["Signs Preceding the End of the World","Yuri Herrera",FIC],
+  ["The Great Work of Your Life","Stephen Cope",PER],
+  ["Character: What Contemporary Leaders Can Teach Us","Gerard Seijts & Kimberley Young Milani",BUS],
+  ["The Body in the Library","Agatha Christie",FIC],
+  ["Matrix","Lauren Groff",FIC]]},
+{ year: 2024, source: F, url: "https://thebookseller.com/news/business-book-of-the-year-award-2024-shortlist-announced-by-financial-times-and-schroders", books: [
+  ["Growth: A Reckoning","Daniel Susskind",FIN],
+  ["Supremacy","Parmy Olson",AI],
+  ["The Corporation in the Twenty-First Century","John Kay",BUS],
+  ["Tribal","Michael Morris",BUS],
+  ["The Longevity Imperative","Andrew J. Scott",FIN],
+  ["Unit X","Raj M. Shah & Christopher Kirchhoff",AI]]}
 ];
 
-const key = t => t.split(":")[0].toLowerCase().replace(/[^a-z0-9 ]/g,"").trim();
-const srcByKey = {};
-DATA.forEach(r => { (srcByKey[key(r[1])] ||= new Set()).add(r[0]); });
-const rows = DATA.map(r => ({ source:r[0], title:r[1], author:r[2], theme:r[3], lists: srcByKey[key(r[1])].size }));
+// The same book matches across lists when the title (before any colon) and the first author's surname agree.
+const fold = s => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+const bookKey = (title, author) => {
+  const t = fold(title.split(":")[0]).replace(/[^a-z0-9 ]/g, "").trim();
+  const first = fold(author).replace(/\(.*?\)|\bet al\.?/g, "").split(/,|&| and | with /)[0].trim().split(/\s+/).pop().replace(/[^a-z]/g, "");
+  return t + "|" + first;
+};
+const rows = LISTS.flatMap(l => l.books.map(([title, author, theme]) => ({ year: l.year, source: l.source, title, author, theme, key: bookKey(title, author) })));
 
 const $ = id => document.getElementById(id);
 const sources = [J,M,L,H,F];
+const SHORT = { [J]: "J.P. Morgan", [M]: "McKinsey", [L]: "LBS", [H]: "HBS", [F]: "FT shortlist" };
+const years = [...new Set(LISTS.map(l => l.year))].sort((a,b) => b - a);
 const themes = [...new Set(rows.map(r=>r.theme))].sort();
+years.forEach(y => $("fyr").add(new Option(y, y)));
 sources.forEach(s => $("fsrc").add(new Option(s, s)));
 themes.forEach(t => $("fthm").add(new Option(t, t)));
 
-const uniqueTitles = Object.keys(srcByKey).length;
-const multi = Object.values(srcByKey).filter(s=>s.size>1).length;
-$("stats").innerHTML = `<span><b>${rows.length}</b> entries</span><span><b>${uniqueTitles}</b> unique titles</span><span><b>${multi}</b> on 2+ lists</span><span><b>${sources.length}</b> sources</span>`;
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+$("sources").innerHTML = years.map(y => `<div><b>${y}</b> sources: ` +
+  LISTS.filter(l => l.year === y).map(l => `<a href="${esc(l.url)}" target="_blank" rel="noopener">${SHORT[l.source]}</a>`).join(" · ") + `</div>`).join("");
 
 let sortK = null, sortDir = 1;
-const esc = s => s.replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 
 function render() {
-  const q = $("q").value.trim().toLowerCase(), fs = $("fsrc").value, ft = $("fthm").value, fm = $("fmulti").checked;
-  let out = rows.filter(r =>
+  const fy = $("fyr").value, q = $("q").value.trim().toLowerCase(), fs = $("fsrc").value, ft = $("fthm").value, fm = $("fmulti").checked;
+  // "Lists" is counted within the selected year, or across all years when none is picked.
+  const scope = rows.filter(r => !fy || r.year === +fy);
+  const listsByKey = new Map();
+  scope.forEach(r => { if (!listsByKey.has(r.key)) listsByKey.set(r.key, new Set()); listsByKey.get(r.key).add(r.source + " " + r.year); });
+  scope.forEach(r => { r.lists = listsByKey.get(r.key).size; });
+
+  const listCount = new Set(scope.map(r => r.source + " " + r.year)).size;
+  const multi = [...listsByKey.values()].filter(s => s.size > 1).length;
+  $("stats").innerHTML = `<span><b>${scope.length}</b> entries</span><span><b>${listsByKey.size}</b> unique titles</span><span><b>${multi}</b> on 2+ lists</span><span><b>${listCount}</b> lists</span>`;
+
+  let out = scope.filter(r =>
     (!q || r.title.toLowerCase().includes(q) || r.author.toLowerCase().includes(q)) &&
     (!fs || r.source === fs) && (!ft || r.theme === ft) && (!fm || r.lists > 1));
   if (sortK) out.sort((a,b) => {
@@ -320,24 +640,25 @@ function render() {
     return (typeof x === "number" ? x - y : x.localeCompare(y)) * sortDir || a.title.localeCompare(b.title);
   });
   $("rows").innerHTML = out.map(r => `<tr>
+    <td class="year">${r.year}</td>
     <td><span class="src" data-s="${esc(r.source)}">${esc(r.source)}</span></td>
     <td class="title">${esc(r.title)}</td>
     <td class="author">${esc(r.author)}</td>
     <td class="theme">${esc(r.theme)}</td>
     <td class="num">${r.lists > 1 ? `<span class="multi">${r.lists}</span>` : "1"}</td></tr>`).join("");
   $("empty").hidden = out.length > 0;
-  $("count").textContent = `Showing ${out.length} of ${rows.length}`;
+  $("count").textContent = `Showing ${out.length} of ${scope.length}`;
 }
 
 document.querySelectorAll("thead th").forEach(th => th.querySelector("button").addEventListener("click", () => {
   const k = th.dataset.k;
-  if (sortK === k) sortDir = -sortDir; else { sortK = k; sortDir = k === "lists" ? -1 : 1; }
+  if (sortK === k) sortDir = -sortDir; else { sortK = k; sortDir = (k === "lists" || k === "year") ? -1 : 1; }
   document.querySelectorAll("thead th").forEach(o => o.setAttribute("aria-sort", "none"));
   th.setAttribute("aria-sort", sortDir === 1 ? "ascending" : "descending");
   render();
 }));
-["q","fsrc","fthm","fmulti"].forEach(id => $(id).addEventListener("input", render));
-$("reset").addEventListener("click", () => { $("q").value=""; $("fsrc").value=""; $("fthm").value=""; $("fmulti").checked=false; render(); });
+["q","fyr","fsrc","fthm","fmulti"].forEach(id => $(id).addEventListener("input", render));
+$("reset").addEventListener("click", () => { $("q").value=""; $("fyr").value=""; $("fsrc").value=""; $("fthm").value=""; $("fmulti").checked=false; render(); });
 render();
 </script>
 </body>
