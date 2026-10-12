@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icons@7.2.3/css/flag-icons.min.css">
 <style>
 /* Layout: a library card-catalogue ledger. Header with counts, a filter bar, then one sortable table. */
 :root {
@@ -59,7 +60,7 @@ h1 { font-family: var(--font-display); font-weight: 600; font-size: clamp(28px, 
 .controls input { flex: 1 1 240px; }
 .controls select { flex: 0 1 200px; }
 .controls select#fyr { flex: 0 1 130px; }
-.controls label.chk { display: flex; gap: 6px; align-items: center; font-size: 14px; color: var(--muted); cursor: pointer; }
+.controls label.chk { display: flex; gap: 6px; white-space: nowrap; align-items: center; font-size: 14px; color: var(--muted); cursor: pointer; }
 .controls button { font: inherit; font-size: 14px; background: transparent; color: var(--accent); border: 1px solid var(--accent); border-radius: 6px; padding: 8px 12px; cursor: pointer; }
 .controls button:hover { background: var(--accent-soft); }
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
@@ -77,6 +78,7 @@ tbody tr:hover { background: var(--accent-soft); }
 tbody tr:last-child td { border-bottom: 0; }
 td.title { font-family: var(--font-display); font-size: 16.5px; font-weight: 500; }
 td.author { color: var(--muted); }
+td.author .fi { margin-left: 5px; border-radius: 2px; box-shadow: 0 0 0 1px var(--rule); vertical-align: -1px; }
 td.num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; text-align: center; }
 td.year { font-family: var(--font-mono); font-size: 13px; font-variant-numeric: tabular-nums; color: var(--muted); }
 .multi { display: inline-block; min-width: 22px; padding: 1px 6px; border-radius: 10px; background: var(--hi); color: var(--ink); font-weight: 500; }
@@ -104,7 +106,7 @@ footer b { color: var(--ink); font-weight: 500; font-family: var(--font-mono); }
   </header>
 
   <div class="controls">
-    <input id="q" type="search" placeholder="Search title or author" aria-label="Search title or author">
+    <input id="q" type="search" placeholder="Search title, author or country" aria-label="Search title, author or country">
     <select id="fyr" aria-label="Filter by year"><option value="">All years</option></select>
     <select id="fsrc" aria-label="Filter by source"><option value="">All sources</option></select>
     <select id="fthm" aria-label="Filter by theme"><option value="">All themes</option></select>
@@ -131,7 +133,7 @@ footer b { color: var(--ink); font-weight: 500; font-family: var(--font-mono); }
   </div>
 
   <footer>
-    <div>“Lists” counts how many of the lists in the selected year (or across all three years) include the same title, so a book McKinsey recommended in both 2024 and 2025 counts twice. J.P. Morgan entries include each year’s spotlight title. Goldman Sachs did not publish a book list in 2026; Lloyd Blankfein’s <em>Streetwise</em> appears here through the LBS list. The 2024 LBS picks are taken from the LBS library’s Think@LBS bookshelf, as the original article is no longer online.</div>
+    <div>“Lists” counts how many of the lists in the selected year (or across all three years) include the same title, so a book McKinsey recommended in both 2024 and 2025 counts twice. J.P. Morgan entries include each year’s spotlight title. Flags show each author’s nationality (hover for the country); authors whose nationality we couldn’t confirm, and organisations, have none. Goldman Sachs did not publish a book list in 2026; Lloyd Blankfein’s <em>Streetwise</em> appears here through the LBS list. The 2024 LBS picks are taken from the LBS library’s Think@LBS bookshelf, as the original article is no longer online.</div>
     <div id="sources"></div>
   </footer>
 </div>
@@ -596,6 +598,46 @@ const LISTS = [
   ["Unit X","Raj M. Shah & Christopher Kirchhoff",AI]]}
 ];
 
+// Author nationality (ISO country code → author names). Authors not listed get no flag.
+const NATIONALITY = {
+  us: "Abraham Verghese|Adam Grant|Adia Harvey Wingfield|Admiral James Stavridis|Aerin Lauder|Agnes Callard|Alan Eagle|Alec Nevala-Lee|Alex Ellison|Alex Hanna|Alexander C. Karp|Alfred Fortunato|Alfred Lansing|Alison A. Armstrong|Amy C. Edmondson|Amy Griffin|Andrea Freeman|Andrew Ross Sorkin|Annabelle Tometich|Anne Curzan|Anne Fadiman|Anne Lamott|Arthur C. Brooks|Arthur Herman|Avriel Epps|Barbara Demick|Barbara Kingsolver|Ben Horowitz|Bernie Banks|Betsy Wills|Beverly Gage|Bill Gifford|Bill Perkins|Blair Kamin|Bonnie Garmus|Brandon Turner|Brian Potter|Brian Rosenberg|Brianna Wiest|Cal Newport|Calley Means|Carol S. Dweck|Casey Means|Charan Ranganath|Charles Duhigg|Charles Eisenstein|Cheryl McKissack Daniel|Chris Miller|Christine Yu|Christopher Kirchhoff|Clay Risen|Clayton M. Christensen|Connie Wang|Craig Mundie|Dan Heath|Dan Slepian|Dana Suskind|Daniel Dennett|Daniel Mendelsohn|Daniel Yergin|Danny Meyer|Dave Logan|David A. Mindell|David Brooks|David Epstein|David Leonhardt|David Moss|David Pogue|David Wallace-Wells|De Kai|Derek Thompson|Don Yaeger|Donna Tartt|Doris Kearns Goodwin|Douglas Hofstadter|Ed Ruscha|Edward Fishman|Elizabeth Strout|Elliot Ackerman|Elyse Graham|Emily Lakdawalla|Emily M. Bender|Eric Klinenberg|Eric Schmidt|Erik Larson|Erin Meyer|Ethan Mollick|Eva Dou|Evan Osnos|Everett Rogers|Ezra Klein|Fareed Zakaria|Fawn Weaver|Frances Lee|Francis J. Gavin|Francisco Jiménez|Gabrielle Zevin|Gary White|George Newman|George Saunders|Gerard K. O'Neill|Glenn Adamson|Grace Lindsay|Graham Allison|Graham Moore|Greg Shaw|Gregory M. Walton|Greta Caruso|Gretchen Heefner|Halee Fischer-Wright|Hanif Abdurraqib|Harry R. Lewis|Heather Cox Richardson|Henry A. Kissinger|Henry Kissinger|Herman Melville|Herminia Ibarra|Hernan Diaz|Ian Fletcher|Ian Wardropper|Ibram X. Kendi|Isaac Asimov|Isabel Wilkerson|J. Emmett Duffy|Jake Gyllenhaal|James L. Green|James Lawrence|James Patterson|James Rhee|Jason Rezaian|Jason Roberts|Jeffrey Rosen|Jennifer Breheny Wallace|Jenny Holzer|Jens Ludwig|Jill Lepore|Jill Tracie Nichols|Jim Collins|Jimmie James|Joanna Stern|Jodi Kantor|Joe Posnanski|Joel Stein|John Bradshaw|John Doerr|John King|John Sandford|John W. O'Malley|John Williams|Jon Pessah|Jonathan Haidt|Jonathan Rosenberg|Jonathan S. Blake|Josh Tyrangiel|Joshua Robinson|Julia Galef|Justin Farrell|Karen Cyphers|Karen Dillon|Karen Hao|Katherine M. Gehl|Keach Hagey|Keisha N. Blain|Kenneth Rogoff|Kevin Evers|Kurt Strovink|Kurt Vonnegut|Larry Warsh|Laura Mae Martin|Lauren Groff|Leah Boustan|Lena Dunham|Liaquat Ahamed|Lindy Elkins-Tanton|Lisa Dickey|Lisa Laskow Lahey|Liz Moore|Lloyd Blankfein|Lydia Millet|M. K. Asante|M. Scott Peck|Maia Kobabe|Marc Fasteau|Marc J. Dunkelman|Margaret A. Weitekamp|Marie Benedict|Marina Nitze|Marshall Ganz|Martha Wells|Mary Roach|Matt Damon|Matt Eversmann|Matt Mayberry|Matthew D. LaPlante|Matthew Desmond|Matthew Weaver|Max Bennett|Meghan O'Gieblyn|Melinda French Gates|Melissa Swift|Michael A. Singer|Michael E. Porter|Michael Easter|Michael Morris|Michael Petry|Michael Pettis|Michael S. Okun|Michael Schur|Mike Colias|Mikey Dickerson|Miranda July|Monica Wood|Morgan Housel|Morgan Radford|Mónica Guzmán|Natalie Foster|Nate DiMeo|Nathaniel Philbrick|Nicholas D. Kristof|Nicholas W. Zamiska|Nick Chiles|Nicole Perlroth|Nikki Giovanni|Nils Gilman|Oprah Winfrey|Parmy Olson|Patmeena Sabit|Patricia Faison Hewlin|Patrick Bringley|Patrick Lencioni|Patrick Radden Keefe|Percival Everett|Peter Rogers|Peter Zeihan|Priya Parker|Raj M. Shah|Randall K. Wilson|Ray Bradbury|Ray Dorsey|Ray Kurzweil|Rebecca Makkai|Ric Bucher|Richard E. Spear|Rick Atkinson|Rick Rubin|Rob Manning|Robert A. Caro|Robert Kegan|Ron Chernow|Roxanne Dunbar-Ortiz|Safi Bahcall|Sahil Bloom|Salman Khan|Sandeep Jauhar|Santi Elijah Holley|Sarah Kay|Satya Nadella|Scott Adams|Scott Anderson|Scott Keller|Scott Turow|Sheila Johnson|Sherman A. Jackson|Simone Stolzoff|Sloane Crosley|Stephen Cope|Stephen Macedo|Stephen Witt|Steven G. Rogelberg|Susan Leal|Susan Rabiner|Suzy Welch|Ta-Nehisi Coates|Tara Mohr|Theo Baker|Thomas Insel|Tina Knowles|Tracy Kidder|Valerie Bauerlein|Victoria Christopher Murray|Virginia Evans|Walt Hunter|Walter Isaacson|William Bridges|William Egginton|William Ury|Xochitl Gonzalez|Yulin Kuang|Zarna Garg|Zoë Schlanger",
+  gb: "Adam Higginbotham|Adrian Tchaikovsky|Agatha Christie|Alex Perry|Andrew J. Scott|Chloe Dalton|Christopher Hibbert|Courtney Daniella Boateng|Dan Davies|Daniel Susskind|Dr Tommy Wood|Dr. Mandeep Rai|Elinor Cleghorn|Fay Weldon|Hallie Rubenhold|Helen Czerski|Hilary Cottam|Iain Banks|Ian McEwan|Issy von Simson|John Kay|Jonathan Clegg|Jonathan Coe|Kate Moore|Kate Smaje|Katrina Manson|Keith Thomas|Lionel Barber|Matt Haig|Matthew Parker|Matthew Walker|Melinda Stevens|Michael Bhaskar|Mustafa Suleyman|Niall Ferguson|Nick Hornby|Nigel Warburton|Oliver Burkeman|Renée Kapuku|Richard Holmes|Robert Harris|Robert Macfarlane|Roger Bennett|Roger Scruton|Ros Atkins|Samantha Harvey|Sebastian Mallaby|Simon Boas|Sophie Elmhirst|Stephen Bungay|Tabitha Joyce|Tom Fletcher|Verity Harding|Zeinab Badawi",
+  ca: "Christopher DiCarlo|Cory Doctorow|Dan Gardner|Dan Wang|David Miller|Deb Chachra|Dennis E. Taylor|Emily St. John Mandel|Gerard Seijts|Kimberley Young Milani|Lorna Gibson|Peter Attia|Philip Sohm|Shane Parrish|Susan Casey",
+  au: "Andrew N. Liveris|David A. Sinclair|James Allworth|Kevin Rudd",
+  nz: "Eleanor Catton|Jacinda Ardern|Sarah Wynn-Williams",
+  ie: "Aimee Donnellan|Sally Rooney|Tana French",
+  fr: "Alexis de Tocqueville|Annie Ernaux|Pierre Bourdieu|Victor Hugo",
+  de: "Christian Sellmann|Hans-Werner Kaas|Josef Brunner",
+  it: "Clementina Galli Zugaro|Emilio Galli Zugaro|Giuliano da Empoli",
+  ru: "Alexei Navalny|Arsen Tomsky|Ivan Turgenev|Leo Tolstoy|Vladislav Zubok",
+  at: "Joseph A. Schumpeter|Viktor E. Frankl",
+  il: "Daniel Kahneman|Ilan Pappe|Yuval Noah Harari",
+  nl: "Rutger Bregman|Sven Smit",
+  se: "Carl Benedikt Frey|Johan Roos",
+  dk: "Bent Flyvbjerg",
+  no: "Odd Arne Westad",
+  pl: "Olga Tokarczuk",
+  tr: "Elif Shafak",
+  cl: "Benjamín Labatut|César Hidalgo",
+  mx: "Carissa Véliz|Yuri Herrera",
+  br: "Paulo Coelho",
+  jm: "Safiya Sinclair",
+  tt: "Lesley-Ann Noel",
+  ng: "Femi Otedola",
+  za: "Phuthuma Nhleko",
+  zw: "Peter Godwin",
+  dz: "Kamel Daoud",
+  mr: "Ahmed Fal al-Din",
+  lb: "Zahra Hankir",
+  in: "Pulak Prasad|Ruchir Sharma",
+  cn: "Chen Qiufan",
+  tw: "Kai-Fu Lee",
+  kr: "Chung Ju-yung|Han Kang",
+  jp: "Shigehiro Oishi|Takashi Shiraishi",
+  sg: "Lee Kuan Yew",
+  ph: "Patricia Evangelista"
+};
+
 // The same book matches across lists when the title (before any colon) and the first author's surname agree.
 const fold = s => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
 const bookKey = (title, author) => {
@@ -603,7 +645,21 @@ const bookKey = (title, author) => {
   const first = fold(author).replace(/\(.*?\)|\bet al\.?/g, "").split(/,|&| and | with /)[0].trim().split(/\s+/).pop().replace(/[^a-z]/g, "");
   return t + "|" + first;
 };
-const rows = LISTS.flatMap(l => l.books.map(([title, author, theme]) => ({ year: l.year, source: l.source, title, author, theme, key: bookKey(title, author) })));
+const countryOf = {};
+Object.entries(NATIONALITY).forEach(([cc, names]) => names.split("|").forEach(n => { countryOf[n] = cc; }));
+const regionName = new Intl.DisplayNames(["en"], { type: "region" });
+// Split an author line into names and the separators between them, keeping the original wording.
+const AUTHOR_SEP = /(\s*(?:,|&| and | with )\s*)/;
+const authorParts = author => author.split(AUTHOR_SEP).filter(Boolean).map(part => {
+  if (AUTHOR_SEP.test(part)) return { text: part };
+  const cc = countryOf[part.replace(/\s*\((?:eds?\.)\)|\s*et al\.?/g, "").trim()];
+  return { text: part, cc, country: cc && regionName.of(cc.toUpperCase()) };
+});
+const rows = LISTS.flatMap(l => l.books.map(([title, author, theme]) => {
+  const parts = authorParts(author);
+  const countries = [...new Set(parts.map(p => p.country).filter(Boolean))].join(" ").toLowerCase();
+  return { year: l.year, source: l.source, title, author, parts, countries, theme, key: bookKey(title, author) };
+}));
 
 const $ = id => document.getElementById(id);
 const sources = [J,M,L,H,F];
@@ -633,7 +689,7 @@ function render() {
   $("stats").innerHTML = `<span><b>${scope.length}</b> entries</span><span><b>${listsByKey.size}</b> unique titles</span><span><b>${multi}</b> on 2+ lists</span><span><b>${listCount}</b> lists</span>`;
 
   let out = scope.filter(r =>
-    (!q || r.title.toLowerCase().includes(q) || r.author.toLowerCase().includes(q)) &&
+    (!q || r.title.toLowerCase().includes(q) || r.author.toLowerCase().includes(q) || r.countries.includes(q)) &&
     (!fs || r.source === fs) && (!ft || r.theme === ft) && (!fm || r.lists > 1));
   if (sortK) out.sort((a,b) => {
     const x = a[sortK], y = b[sortK];
@@ -643,7 +699,7 @@ function render() {
     <td class="year">${r.year}</td>
     <td><span class="src" data-s="${esc(r.source)}">${esc(r.source)}</span></td>
     <td class="title">${esc(r.title)}</td>
-    <td class="author">${esc(r.author)}</td>
+    <td class="author">${r.parts.map(p => esc(p.text) + (p.cc ? `<span class="fi fi-${p.cc}" role="img" aria-label="${esc(p.country)}" title="${esc(p.country)}"></span>` : "")).join("")}</td>
     <td class="theme">${esc(r.theme)}</td>
     <td class="num">${r.lists > 1 ? `<span class="multi">${r.lists}</span>` : "1"}</td></tr>`).join("");
   $("empty").hidden = out.length > 0;
