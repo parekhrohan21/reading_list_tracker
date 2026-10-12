@@ -19,7 +19,7 @@
   --accent: #1f5e57;
   --accent-soft: #e2eeeb;
   --hi: #fff6d6;
-  --s-jpm: #6b4b2a; --s-mck: #1f4e86; --s-lbs: #8a1c3a; --s-hbs: #7a1f1f; --s-ft: #a35a00; --s-gn: #2f6b2a; --s-lse: #5b2a86;
+  --s-jpm: #6b4b2a; --s-mck: #1f4e86; --s-lbs: #8a1c3a; --s-hbs: #7a1f1f; --s-ft: #a35a00; --s-gn: #2f6b2a; --s-lse: #5b2a86; --s-gs: #3b5f8f; --s-blk: #444444;
   --font-display: "Newsreader", Georgia, "Times New Roman", serif;
   --font-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
@@ -32,14 +32,14 @@
   :root:not([data-theme="light"]) {
     --bg: #121615; --surface: #1a201e; --ink: #e6ebe8; --muted: #9aa8a3; --rule: #2c3532;
     --accent: #6fc1b4; --accent-soft: #1d2f2c; --hi: #3a3418;
-    --s-jpm: #d8b48a; --s-mck: #8fb6ec; --s-lbs: #ec8aa4; --s-hbs: #f09a8a; --s-ft: #f2b765; --s-gn: #9bd38f; --s-lse: #c9a3f0;
+    --s-jpm: #d8b48a; --s-mck: #8fb6ec; --s-lbs: #ec8aa4; --s-hbs: #f09a8a; --s-ft: #f2b765; --s-gn: #9bd38f; --s-lse: #c9a3f0; --s-gs: #a9c4e8; --s-blk: #cfcfcf;
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
   --bg: #121615; --surface: #1a201e; --ink: #e6ebe8; --muted: #9aa8a3; --rule: #2c3532;
   --accent: #6fc1b4; --accent-soft: #1d2f2c; --hi: #3a3418;
-  --s-jpm: #d8b48a; --s-mck: #8fb6ec; --s-lbs: #ec8aa4; --s-hbs: #f09a8a; --s-ft: #f2b765; --s-gn: #9bd38f; --s-lse: #c9a3f0;
+  --s-jpm: #d8b48a; --s-mck: #8fb6ec; --s-lbs: #ec8aa4; --s-hbs: #f09a8a; --s-ft: #f2b765; --s-gn: #9bd38f; --s-lse: #c9a3f0; --s-gs: #a9c4e8; --s-blk: #cfcfcf;
   color-scheme: dark;
 }
 html { scroll-padding-top: env(safe-area-inset-top, 0px); }
@@ -90,6 +90,8 @@ td.year { font-family: var(--font-mono); font-size: 13px; font-variant-numeric: 
 .src[data-s="FT Business Book Shortlist"] { color: var(--s-ft); }
 .src[data-s="Gates Notes"] { color: var(--s-gn); }
 .src[data-s="London School of Economics"] { color: var(--s-lse); }
+.src[data-s="Goldman Sachs"] { color: var(--s-gs); }
+.src[data-s="BlackRock Investment Institute"] { color: var(--s-blk); }
 .theme { font-size: 13.5px; }
 .empty { padding: 32px; text-align: center; color: var(--muted); }
 footer { color: var(--muted); font-size: 13px; display: grid; gap: 6px; max-width: 80ch; }
@@ -101,9 +103,9 @@ footer b { color: var(--ink); font-weight: 500; font-family: var(--font-mono); }
 <body>
 <div class="wrap">
   <header>
-    <div class="eyebrow">Reading lists · 2024–2026</div>
+    <div class="eyebrow">Reading lists · 2015–2026</div>
     <h1>Reading Lists Tracker</h1>
-    <p class="lede">Every title from J.P. Morgan, McKinsey, London Business School, Harvard Business School, the London School of Economics, the FT Business Book of the Year shortlist and Bill Gates’s Gates Notes, from 2024 to 2026, in one table. Pick a year or see them all; click a column heading to sort.</p>
+    <p class="lede">Every title from J.P. Morgan, McKinsey, London Business School, Harvard Business School, the London School of Economics, the FT Business Book of the Year shortlist and Bill Gates’s Gates Notes (2024–2026), plus the Goldman Sachs and BlackRock Investment Institute lists (2015–2019), in one table. Pick a year or see them all; click a column heading to sort.</p>
     <div class="stats" id="stats"></div>
   </header>
 
@@ -135,13 +137,13 @@ footer b { color: var(--ink); font-weight: 500; font-family: var(--font-mono); }
   </div>
 
   <footer>
-    <div>“Lists” counts how many of the lists in the selected year (or across all three years) include the same title, so a book McKinsey recommended in both 2024 and 2025 counts twice. J.P. Morgan entries include each year’s spotlight title. Gates Notes combines Bill Gates’s summer and holiday picks into one list per year (2026 has the summer list so far); they are confirmed through press coverage because gatesnotes.com blocks automated access. The LSE list is the LSE Review of Books editors’ best books of 2024; LSE published no general list in 2025 or 2026. Flags show each author’s nationality (hover for the country); authors whose nationality we couldn’t confirm, and organisations, have none. Goldman Sachs did not publish a book list in 2026; Lloyd Blankfein’s <em>Streetwise</em> appears here through the LBS list. The 2024 LBS picks are taken from the LBS library’s Think@LBS bookshelf, as the original article is no longer online.</div>
+    <div>“Lists” counts how many of the lists in the selected year (or across all three years) include the same title, so a book McKinsey recommended in both 2024 and 2025 counts twice. J.P. Morgan entries include each year’s spotlight title. Gates Notes combines Bill Gates’s summer and holiday picks into one list per year (2026 has the summer list so far); they are confirmed through press coverage because gatesnotes.com blocks automated access. The LSE list is the LSE Review of Books editors’ best books of 2024; LSE published no general list in 2025 or 2026. Flags show each author’s nationality (hover for the country); authors whose nationality we couldn’t confirm, and organisations, have none. Goldman Sachs’ annual back-to-school list ran from 2015 to 2019 and BlackRock Investment Institute’s summer and holiday lists from 2015 to 2019; both are taken from archived copies of their original pages (Wayback Machine), and neither firm has published a list since. There are no lists in this tracker for 2020–2023. Lloyd Blankfein’s <em>Streetwise</em> appears in 2026 through the LBS list. The 2024 LBS picks are taken from the LBS library’s Think@LBS bookshelf, as the original article is no longer online.</div>
     <div id="sources"></div>
   </footer>
 </div>
 
 <script>
-const J="J.P. Morgan", M="McKinsey", L="London Business School", H="Harvard Business School", F="FT Business Book Shortlist", G="Gates Notes", E="London School of Economics";
+const J="J.P. Morgan", M="McKinsey", L="London Business School", H="Harvard Business School", F="FT Business Book Shortlist", G="Gates Notes", E="London School of Economics", S="Goldman Sachs", B="BlackRock Investment Institute";
 const AI="AI & technology", BUS="Business & leadership", FIN="Finance & economics", POL="Geopolitics & politics", HIS="History", BIO="Biography & memoir", PER="Personal development", FIC="Fiction & literature", HEA="Health & science", ART="Art & culture", SUS="Sustainability & environment", WRK="Workplace culture", SPO="Sport";
 const LISTS = [
 // ───────────── 2026 ─────────────
@@ -633,47 +635,316 @@ const LISTS = [
   ["The Anxious Generation","Jonathan Haidt",HEA],
   ["Engineering in Plain Sight","Grady Hillhouse",HEA],
   ["The Coming Wave","Mustafa Suleyman with Michael Bhaskar",AI],
-  ["Federer","Doris Henkel",SPO]]}
+  ["Federer","Doris Henkel",SPO]]},
+
+// ───────────── 2019 ─────────────
+{ year: 2019, source: S, url: "https://web.archive.org/web/20200101221900/https://www.goldmansachs.com/careers/blog/posts/back-to-school-reading-list-2019.html", books: [
+  ["The Road to Character","David Brooks",PER],
+  ["Daisy Jones and The Six","Taylor Jenkins Reid",FIC],
+  ["The Immortalists","Chloe Benjamin",FIC],
+  ["The Moment of Lift: How Empowering Women Changes the World","Melinda Gates",POL],
+  ["The Origin of Others","Toni Morrison",ART],
+  ["Out of the Gobi: My Story of China and America","Weijian Shan",BIO],
+  ["Unbeatable Mind","Mark Divine",PER],
+  ["The Remains of the Day","Kazuo Ishiguro",FIC],
+  ["Joyful","Ingrid Fetell Lee",PER],
+  ["Just Mercy","Bryan Stevenson",POL],
+  ["The Night Circus","Erin Morgenstern",FIC],
+  ["Machines Like Me","Ian McEwan",FIC],
+  ["Educated","Tara Westover",BIO],
+  ["The Immortal Life of Henrietta Lacks","Rebecca Skloot",HEA],
+  ["The Billion Dollar Molecule","Barry Werth",BUS],
+  ["The Silo Effect","Gillian Tett",BUS],
+  ["Bad Blood: Secrets and Lies in a Silicon Valley Startup","John Carreyrou",BUS],
+  ["Shoe Dog","Phil Knight",BIO],
+  ["A Gentleman in Moscow","Amor Towles",FIC],
+  ["The Parisian","Isabella Hammad",FIC],
+  ["Concept of the Corporation","Peter F. Drucker",BUS],
+  ["Q-Economy","Anders Indset",BUS],
+  ["TED Talks: The Official TED Guide to Public Speaking","Chris Anderson",PER],
+  ["The Strength Switch","Dr. Lea Waters",PER],
+  ["West with the Night","Beryl Markham",BIO],
+  ["The Gene: An Intimate History","Siddhartha Mukherjee",HEA],
+  ["Born a Crime: Stories from a South African Childhood","Trevor Noah",BIO],
+  ["Ikigai: The Japanese Secret to a Long and Happy Life","Héctor García & Francesc Miralles",PER],
+  ["Design the Life You Love","Ayse Birsel",PER],
+  ["Legacy","James Kerr",BUS],
+  ["The Alchemist","Paulo Coelho",FIC],
+  ["Alexander Hamilton","Ron Chernow",BIO],
+  ["Cockpit Confidential","Patrick Smith",PER],
+  ["The Rise and Fall of the Great Powers","Paul Kennedy",HIS],
+  ["Man's Search for Meaning","Viktor E. Frankl",PER],
+  ["The 5 Second Rule","Mel Robbins",PER],
+  ["All Out War","Tim Shipman",POL],
+  ["A Suitable Boy","Vikram Seth",FIC],
+  ["Destined for War","Graham Allison",POL],
+  ["Following Your Dream","Pietro Lievens",PER],
+  ["Measure What Matters","John Doerr",BUS],
+  ["Frederick Douglass: Prophet of Freedom","David W. Blight",BIO],
+  ["Becoming","Michelle Obama",BIO],
+  ["He Wanted the Moon","Mimi Baird",BIO],
+  ["The Second Mountain","David Brooks",PER],
+  ["Can't Hurt Me","David Goggins",PER],
+  ["The Good Spy: The Life and Death of Robert Ames","Kai Bird",BIO]]},
+{ year: 2019, source: B, label: "BlackRock (summer)", url: "https://web.archive.org/web/20190715190105/https://www.blackrockblog.com/2019/07/02/book-list-for-beach-reading/", books: [
+  ["The 100-Year Life","Lynda Gratton & Andrew J. Scott",WRK],
+  ["Days of Destruction, Days of Revolt","Chris Hedges & Joe Sacco",POL],
+  ["Destined for War","Graham Allison",POL],
+  ["The Growth Delusion","David Pilling",FIN],
+  ["Red Notice","Bill Browder",FIN],
+  ["The Sarawak Report","Clare Rewcastle Brown",FIN],
+  ["Billion Dollar Whale","Tom Wright & Bradley Hope",FIN],
+  ["The Square and the Tower","Niall Ferguson",HIS],
+  ["Why We Sleep","Matthew Walker",HEA],
+  ["Normal People","Sally Rooney",FIC],
+  ["The Friend","Sigrid Nunez",FIC]]},
+{ year: 2019, source: B, label: "BlackRock (holiday)", url: "https://web.archive.org/web/20200506025219/https://www.blackrockblog.com/2019/12/19/a-holiday-reading-list-from-the-blackrock-investment-institute/", books: [
+  ["Bankers and Bolsheviks","Hassan Malik",FIN],
+  ["Blindspot: Hidden Biases of Good People","Mahzarin R. Banaji & Anthony G. Greenwald",HEA],
+  ["The Globotics Upheaval","Richard Baldwin",AI],
+  ["The Great Reversal","Thomas Philippon",FIN],
+  ["Hacking Darwin","Jamie Metzl",HEA],
+  ["How History Gets Things Wrong","Alex Rosenberg",HIS],
+  ["Say Nothing","Patrick Radden Keefe",HIS],
+  ["There Is No Planet B","Mike Berners-Lee",SUS],
+  ["Homeland","Fernando Aramburu",FIC],
+  ["Spark of Life","Erich Maria Remarque",FIC],
+  ["Defying Hitler","Sebastian Haffner",BIO]]},
+
+// ───────────── 2018 ─────────────
+{ year: 2018, source: S, url: "https://web.archive.org/web/20190611190248/https://www.goldmansachs.com/careers/blog/posts/fall-reading-list-2018.html", books: [
+  ["The Making of Modern Britain","Andrew Marr",HIS],
+  ["My Brilliant Friend","Elena Ferrante",FIC],
+  ["Wild Swans: Three Daughters of China","Jung Chang",BIO],
+  ["Kindred","Octavia E. Butler",FIC],
+  ["Sports Geek","Rob Minto",SPO],
+  ["Leonardo da Vinci","Walter Isaacson",BIO],
+  ["Strangers in Their Own Land","Arlie Russell Hochschild",POL],
+  ["The Unbanking of America","Lisa Servon",FIN],
+  ["Factfulness","Hans Rosling",PER],
+  ["Chasing the Scream","Johann Hari",POL],
+  ["Empire of the Summer Moon","S. C. Gwynne",HIS],
+  ["Speak Now: Marriage Equality on Trial","Kenji Yoshino",POL],
+  ["Subliminal: How Your Unconscious Mind Rules Your Behavior","Leonard Mlodinow",HEA],
+  ["Jonathan Livingston Seagull","Richard Bach",FIC],
+  ["The ONE Thing","Gary Keller with Jay Papasan",PER],
+  ["The Culture Code","Daniel Coyle",WRK],
+  ["How to Be Human","New Scientist",HEA],
+  ["Rough Diamond","Nicole Yershon",BUS],
+  ["Bakhita","Véronique Olmi",FIC],
+  ["World Without Mind","Franklin Foer",AI],
+  ["Hit Refresh","Satya Nadella",AI],
+  ["The Victorian House","Judith Flanders",HIS],
+  ["The Secret History","Donna Tartt",FIC],
+  ["What Justice Demands","Elan Journo",POL],
+  ["The Talented Mr. Ripley","Patricia Highsmith",FIC],
+  ["Principles","Ray Dalio",FIN],
+  ["The Silo Effect","Gillian Tett",BUS],
+  ["When: The Scientific Secrets of Perfect Timing","Daniel H. Pink",PER],
+  ["Why We Sleep","Matthew Walker",HEA],
+  ["Shoe Dog","Phil Knight",BIO],
+  ["Ten Arguments for Deleting Your Social Media Accounts Right Now","Jaron Lanier",AI],
+  ["Beartown","Fredrik Backman",FIC],
+  ["What It Takes: The Way to the White House","Richard Ben Cramer",POL],
+  ["Thirteen Days in September","Lawrence Wright",HIS],
+  ["Americanah","Chimamanda Ngozi Adichie",FIC]]},
+{ year: 2018, source: B, label: "BlackRock (summer)", url: "https://web.archive.org/web/20180709233433/https://www.blackrockblog.com/2018/06/15/summer-reading-list/", books: [
+  ["The Four","Scott Galloway",BUS],
+  ["The Inevitable","Kevin Kelly",AI],
+  ["The Korean War: A History","Bruce Cumings",HIS],
+  ["Life 3.0","Max Tegmark",AI],
+  ["Out of Control","Kevin Kelly",AI],
+  ["Prediction Machines","Ajay Agrawal, Joshua Gans & Avi Goldfarb",AI],
+  ["Sapiens","Yuval Noah Harari",HIS],
+  ["Why We Sleep","Matthew Walker",HEA],
+  ["Circe","Madeline Miller",FIC]]},
+{ year: 2018, source: B, label: "BlackRock (more summer)", url: "https://web.archive.org/web/20190721052649/https://www.blackrockblog.com/2018/08/07/summer-reads/", books: [
+  ["America's War for the Greater Middle East","Andrew J. Bacevich",POL],
+  ["The Gulag Archipelago","Aleksandr Solzhenitsyn",HIS],
+  ["How Soccer Explains the World","Franklin Foer",SPO],
+  ["The Panic of 1907","Robert F. Bruner & Sean D. Carr",FIN],
+  ["Prisoners of Geography","Tim Marshall",POL],
+  ["Why Nations Fail","Daron Acemoglu & James A. Robinson",FIN]]},
+{ year: 2018, source: B, label: "BlackRock (holiday)", url: "https://web.archive.org/web/20190203020517/https://www.blackrockblog.com/2018/12/18/book-recommendations-holiday-reading/", books: [
+  ["Crashed: How a Decade of Financial Crises Changed the World","Adam Tooze",FIN],
+  ["21 Lessons for the 21st Century","Yuval Noah Harari",POL],
+  ["Asia's Cauldron","Robert D. Kaplan",POL],
+  ["Doing Capitalism in the Innovation Economy","William H. Janeway",FIN],
+  ["The Fifth Risk","Michael Lewis",POL],
+  ["The Sleepwalkers: How Europe Went to War in 1914","Christopher Clark",HIS],
+  ["The Undoing Project","Michael Lewis",BIO],
+  ["Milkman","Anna Burns",FIC],
+  ["All the Light We Cannot See","Anthony Doerr",FIC]]},
+
+// ───────────── 2017 ─────────────
+{ year: 2017, source: S, url: "https://web.archive.org/web/20171210123423/http://www.goldmansachs.com/careers/blog/posts/back-to-school-reading-list-2017.html", books: [
+  ["Pachinko","Min Jin Lee",FIC],
+  ["Half the Sky","Nicholas D. Kristof & Sheryl WuDunn",POL],
+  ["American Kingpin","Nick Bilton",BIO],
+  ["The Upstarts","Brad Stone",BUS],
+  ["L'Avenir de l'eau (The Future of Water)","Erik Orsenna",SUS],
+  ["Sapiens","Yuval Noah Harari",HIS],
+  ["Perfect Health","Deepak Chopra",HEA],
+  ["Finish Strong: The Dan Russell Story","Dan Russell",SPO],
+  ["The Last Days of Old Beijing","Michael Meyer",HIS],
+  ["A Brief History of Time","Stephen Hawking",HEA],
+  ["Shoe Dog","Phil Knight",BIO],
+  ["Red Notice","Bill Browder",FIN],
+  ["Richard Nixon: The Life","John A. Farrell",BIO],
+  ["The Presidents Club","Nancy Gibbs & Michael Duffy",HIS],
+  ["Thank You for Being Late","Thomas L. Friedman",AI],
+  ["Do You Still Think You're Clever?","John Farndon",PER],
+  ["The Globalization Paradox","Dani Rodrik",FIN],
+  ["Network Thinking","Ulrich Weinberg",BUS],
+  ["Evolving Ourselves","Juan Enriquez & Steve Gullans",HEA],
+  ["When Breath Becomes Air","Paul Kalanithi",BIO],
+  ["I Know This Much Is True","Wally Lamb",FIC],
+  ["The Wright Brothers","David McCullough",HIS],
+  ["The Power Broker: Robert Moses and the Fall of New York","Robert A. Caro",HIS],
+  ["Mirror, Shoulder, Signal","Dorthe Nors",FIC],
+  ["Don't Let's Go to the Dogs Tonight","Alexandra Fuller",BIO],
+  ["Letters to a Young Muslim","Omar Saif Ghobash",PER],
+  ["The Three-Body Problem","Liu Cixin",FIC],
+  ["Game Worn","Stephen Wong & Dave Grob",SPO],
+  ["Good Night Stories for Rebel Girls","Elena Favilli & Francesca Cavallo",FIC],
+  ["Touching the Void","Joe Simpson",SPO],
+  ["White House Years","Henry Kissinger",POL],
+  ["Homo Deus","Yuval Noah Harari",HIS],
+  ["Strangers in Their Own Land","Arlie Russell Hochschild",POL]]},
+{ year: 2017, source: B, label: "BlackRock (summer)", url: "https://web.archive.org/web/20170902050733/https://www.blackrockblog.com/2017/08/02/7-book-recommendations/", books: [
+  ["Adaptive Markets","Andrew W. Lo",FIN],
+  ["Berlin Rules: Europe and the German Way","Paul Lever",POL],
+  ["Blindspot: Hidden Biases of Good People","Mahzarin R. Banaji & Anthony G. Greenwald",HEA],
+  ["The Book Smugglers of Timbuktu","Charlie English",HIS],
+  ["The Man Who Created the Middle East","Christopher Simon Sykes",HIS],
+  ["Master of the Senate","Robert A. Caro",BIO],
+  ["On Tyranny","Timothy Snyder",POL]]},
+{ year: 2017, source: B, label: "BlackRock (holiday)", url: "https://web.archive.org/web/20190715190038/https://www.blackrockblog.com/2017/12/08/recommendations-holiday-reading/", books: [
+  ["Manias, Panics, and Crashes","Robert Z. Aliber & Charles P. Kindleberger",FIN],
+  ["The Art of Thinking Clearly","Rolf Dobelli",PER],
+  ["Globalization and America's Trade Agreements","William Krist",FIN],
+  ["The Great Leveler","Walter Scheidel",FIN],
+  ["Janesville: An American Story","Amy Goldstein",POL],
+  ["The Nature Fix","Florence Williams",HEA]]},
+
+// ───────────── 2016 ─────────────
+{ year: 2016, source: S, url: "https://web.archive.org/web/20170611141544/http://www.goldmansachs.com/careers/blog/posts/2016-reading-list.html", books: [
+  ["No Place to Hide","Glenn Greenwald",POL],
+  ["Nineteen Eighty-Four","George Orwell",FIC],
+  ["Easternisation: War and Peace in the Asian Century","Gideon Rachman",POL],
+  ["Sapiens","Yuval Noah Harari",HIS],
+  ["Season of the Witch","David Talbot",HIS],
+  ["The Nexus Trilogy","Ramez Naam",FIC],
+  ["Grit: The Power of Passion and Perseverance","Angela Duckworth",PER],
+  ["The Gene: An Intimate History","Siddhartha Mukherjee",HEA],
+  ["The Argumentative Indian","Amartya Sen",POL],
+  ["The Land Where Lemons Grow","Helena Attlee",ART],
+  ["Suite Française","Irène Némirovsky",FIC],
+  ["The Boys in the Boat","Daniel James Brown",SPO],
+  ["Evicted","Matthew Desmond",POL],
+  ["The Quincunx","Charles Palliser",FIC],
+  ["Poorly Made in China","Paul Midler",BUS],
+  ["Asian Godfathers","Joe Studwell",FIN],
+  ["Dispatches","Michael Herr",HIS],
+  ["The Noise of Time","Julian Barnes",FIC],
+  ["Massive Change","Bruce Mau",ART],
+  ["Zero to One","Peter Thiel & Blake Masters",BUS],
+  ["Inverting the Pyramid","Jonathan Wilson",SPO],
+  ["World Order","Henry Kissinger",POL],
+  ["Guns, Germs, and Steel","Jared Diamond",HIS],
+  ["Seinfeldia","Jennifer Keishin Armstrong",ART],
+  ["The Healthy Workplace","Leigh Stringer",WRK],
+  ["Half of a Yellow Sun","Chimamanda Ngozi Adichie",FIC],
+  ["A Little Life","Hanya Yanagihara",FIC],
+  ["The Signal and the Noise","Nate Silver",FIN],
+  ["Churchill: A Life","Martin Gilbert",BIO],
+  ["Between the World and Me","Ta-Nehisi Coates",BIO],
+  ["Black Wealth, White Wealth","Melvin L. Oliver & Thomas Shapiro",POL],
+  ["Homegoing","Yaa Gyasi",FIC]]},
+{ year: 2016, source: B, label: "BlackRock (holiday)", url: "https://web.archive.org/web/20170129133455/https://www.blackrockblog.com/2016/12/22/holiday-reading-list/", books: [
+  ["1491","Charles C. Mann",HIS],
+  ["Capital Returns","Edward Chancellor (ed.)",FIN],
+  ["The Curse of Cash","Kenneth Rogoff",FIN],
+  ["Hillbilly Elegy","J. D. Vance",BIO],
+  ["Homo Deus","Yuval Noah Harari",HIS],
+  ["Rise of the Robots","Martin Ford",AI],
+  ["Showdown at Gucci Gulch","Alan Murray",POL],
+  ["The Silk Roads","Peter Frankopan",HIS]]},
+
+// ───────────── 2015 ─────────────
+{ year: 2015, source: S, url: "https://web.archive.org/web/20170909152410/http://www.goldmansachs.com/careers/blog/posts/back-to-school-reading-list.html", books: [
+  ["A History of the American People","Paul Johnson",HIS],
+  ["Napoleon: A Life","Andrew Roberts",BIO],
+  ["Man's Search for Meaning","Viktor E. Frankl",PER],
+  ["Antifragile","Nassim Nicholas Taleb",FIN],
+  ["Why Information Grows","César Hidalgo",FIN],
+  ["The Divine Within","Aldous Huxley",PER],
+  ["Wolf Hall","Hilary Mantel",FIC],
+  ["How to Stop Worrying and Start Living","Dale Carnegie & Dorothy Carnegie",PER],
+  ["How to Win Friends and Influence People","Dale Carnegie",PER],
+  ["Alexander Hamilton","Ron Chernow",BIO],
+  ["Revival","Stephen King",FIC],
+  ["Dead Wake","Erik Larson",HIS],
+  ["The Short and Tragic Life of Robert Peace","Jeff Hobbs",BIO],
+  ["Moonrise","Ben Bova",FIC],
+  ["The Return of the Native","Thomas Hardy",FIC],
+  ["Against the Gods: The Remarkable Story of Risk","Peter L. Bernstein",FIN],
+  ["Wrestling: On & Off the Mat","R. Wayne Baughman",SPO],
+  ["Zero to One","Peter Thiel",BUS],
+  ["How Google Works","Eric Schmidt",BUS],
+  ["The Wright Brothers","David McCullough",HIS],
+  ["Seveneves","Neal Stephenson",FIC]]},
+{ year: 2015, source: B, label: "BlackRock (summer)", url: "https://web.archive.org/web/20190721052557/https://www.blackrockblog.com/2015/07/02/investing-books-for-summer-reading-list/", books: [
+  ["Margin of Safety","Seth A. Klarman",FIN],
+  ["Money of the Mind","James Grant",FIN],
+  ["Reminiscences of a Stock Operator","Edwin Lefèvre",FIN],
+  ["The Second Machine Age","Erik Brynjolfsson & Andrew McAfee",AI],
+  ["Security Analysis","Benjamin Graham & David Dodd",FIN],
+  ["Thinking, Fast and Slow","Daniel Kahneman",PER],
+  ["This Time Is Different","Carmen M. Reinhart & Kenneth Rogoff",FIN]]}
 ];
 
 // Author nationality (ISO country code → author names). Authors not listed get no flag.
 const NATIONALITY = {
-  us: "Abraham Verghese|Adam Grant|Adia Harvey Wingfield|Admiral James Stavridis|Aerin Lauder|Agnes Callard|Alan Eagle|Alec Nevala-Lee|Alex Ellison|Alex Hanna|Alexander C. Karp|Alfred Fortunato|Alfred Lansing|Alison A. Armstrong|Amy C. Edmondson|Amy Griffin|Andrea Freeman|Andrew Ross Sorkin|Annabelle Tometich|Anne Curzan|Anne Fadiman|Anne Lamott|Arthur C. Brooks|Arthur Herman|Avriel Epps|Barbara Demick|Barbara Kingsolver|Ben Horowitz|Bernie Banks|Betsy Wills|Beverly Gage|Bill Gifford|Bill Perkins|Blair Kamin|Bonnie Garmus|Brandon Turner|Brian Potter|Brian Rosenberg|Brianna Wiest|Cal Newport|Calley Means|Carol S. Dweck|Casey Means|Charan Ranganath|Charles Duhigg|Charles Eisenstein|Cheryl McKissack Daniel|Chris Miller|Christine Yu|Christopher Kirchhoff|Clay Risen|Clayton M. Christensen|Connie Wang|Craig Mundie|Dan Heath|Dan Slepian|Dana Suskind|Daniel Dennett|Daniel Mendelsohn|Daniel Yergin|Danny Meyer|Dave Logan|David A. Mindell|David Brooks|David Epstein|David Leonhardt|David Moss|David Pogue|David Wallace-Wells|De Kai|Derek Thompson|Don Yaeger|Donna Tartt|Doris Kearns Goodwin|Douglas Hofstadter|Ed Ruscha|Edward Fishman|Elizabeth Strout|Elliot Ackerman|Elyse Graham|Emily Lakdawalla|Emily M. Bender|Eric Klinenberg|Eric Schmidt|Erik Larson|Erin Meyer|Ethan Mollick|Eva Dou|Evan Osnos|Everett Rogers|Ezra Klein|Fareed Zakaria|Fawn Weaver|Frances Lee|Francis J. Gavin|Francisco Jiménez|Gabrielle Zevin|Gary White|George Newman|George Saunders|Gerard K. O'Neill|Glenn Adamson|Grace Lindsay|Graham Allison|Graham Moore|Greg Shaw|Gregory M. Walton|Greta Caruso|Gretchen Heefner|Halee Fischer-Wright|Hanif Abdurraqib|Harry R. Lewis|Heather Cox Richardson|Henry A. Kissinger|Henry Kissinger|Herman Melville|Herminia Ibarra|Hernan Diaz|Ian Fletcher|Ian Wardropper|Ibram X. Kendi|Isaac Asimov|Isabel Wilkerson|J. Emmett Duffy|Jake Gyllenhaal|James L. Green|James Lawrence|James Patterson|James Rhee|Jason Rezaian|Jason Roberts|Jeffrey Rosen|Jennifer Breheny Wallace|Jenny Holzer|Jens Ludwig|Jill Lepore|Jill Tracie Nichols|Jim Collins|Jimmie James|Joanna Stern|Jodi Kantor|Joe Posnanski|Joel Stein|John Bradshaw|John Doerr|John King|John Sandford|John W. O'Malley|John Williams|Jon Pessah|Jonathan Haidt|Jonathan Rosenberg|Jonathan S. Blake|Josh Tyrangiel|Joshua Robinson|Julia Galef|Justin Farrell|Karen Cyphers|Karen Dillon|Karen Hao|Katherine M. Gehl|Keach Hagey|Keisha N. Blain|Kenneth Rogoff|Kevin Evers|Kurt Strovink|Kurt Vonnegut|Larry Warsh|Laura Mae Martin|Lauren Groff|Leah Boustan|Lena Dunham|Liaquat Ahamed|Lindy Elkins-Tanton|Lisa Dickey|Lisa Laskow Lahey|Liz Moore|Lloyd Blankfein|Lydia Millet|M. K. Asante|M. Scott Peck|Maia Kobabe|Marc Fasteau|Marc J. Dunkelman|Margaret A. Weitekamp|Marie Benedict|Marina Nitze|Marshall Ganz|Martha Wells|Mary Roach|Matt Damon|Matt Eversmann|Matt Mayberry|Matthew D. LaPlante|Matthew Desmond|Matthew Weaver|Max Bennett|Meghan O'Gieblyn|Melinda French Gates|Melissa Swift|Michael A. Singer|Michael E. Porter|Michael Easter|Michael Morris|Michael Petry|Michael Pettis|Michael S. Okun|Michael Schur|Mike Colias|Mikey Dickerson|Miranda July|Monica Wood|Morgan Housel|Morgan Radford|Mónica Guzmán|Natalie Foster|Nate DiMeo|Nathaniel Philbrick|Nicholas D. Kristof|Nicholas W. Zamiska|Nick Chiles|Nicole Perlroth|Nikki Giovanni|Nils Gilman|Oprah Winfrey|Parmy Olson|Patmeena Sabit|Patricia Faison Hewlin|Patrick Bringley|Patrick Lencioni|Patrick Radden Keefe|Percival Everett|Peter Rogers|Peter Zeihan|Priya Parker|Raj M. Shah|Randall K. Wilson|Ray Bradbury|Ray Dorsey|Ray Kurzweil|Rebecca Makkai|Ric Bucher|Richard E. Spear|Rick Atkinson|Rick Rubin|Rob Manning|Robert A. Caro|Robert Kegan|Ron Chernow|Roxanne Dunbar-Ortiz|Safi Bahcall|Sahil Bloom|Salman Khan|Sandeep Jauhar|Santi Elijah Holley|Sarah Kay|Satya Nadella|Scott Adams|Scott Anderson|Scott Keller|Scott Turow|Sheila Johnson|Sherman A. Jackson|Simone Stolzoff|Sloane Crosley|Stephen Cope|Stephen Macedo|Stephen Witt|Steven G. Rogelberg|Susan Leal|Susan Rabiner|Suzy Welch|Ta-Nehisi Coates|Tara Mohr|Theo Baker|Thomas Insel|Tina Knowles|Tracy Kidder|Valerie Bauerlein|Victoria Christopher Murray|Virginia Evans|Walt Hunter|Walter Isaacson|William Bridges|William Egginton|William Ury|Xochitl Gonzalez|Yulin Kuang|Zarna Garg|Zoë Schlanger|Bruce Holsinger|Theodore H. Schwartz|Katharine Graham|Tara Westover|Shelby Van Pelt|Barry Diller|Kristin Hannah|Grady Hillhouse",
-  gb: "Adam Higginbotham|Adrian Tchaikovsky|Agatha Christie|Alex Perry|Andrew J. Scott|Chloe Dalton|Christopher Hibbert|Courtney Daniella Boateng|Dan Davies|Daniel Susskind|Dr Tommy Wood|Dr. Mandeep Rai|Elinor Cleghorn|Fay Weldon|Hallie Rubenhold|Helen Czerski|Hilary Cottam|Iain Banks|Ian McEwan|Issy von Simson|John Kay|Jonathan Clegg|Jonathan Coe|Kate Moore|Kate Smaje|Katrina Manson|Keith Thomas|Lionel Barber|Matt Haig|Matthew Parker|Matthew Walker|Melinda Stevens|Michael Bhaskar|Mustafa Suleyman|Niall Ferguson|Nick Hornby|Nigel Warburton|Oliver Burkeman|Renée Kapuku|Richard Holmes|Robert Harris|Robert Macfarlane|Roger Bennett|Roger Scruton|Ros Atkins|Samantha Harvey|Sebastian Mallaby|Simon Boas|Sophie Elmhirst|Stephen Bungay|Tabitha Joyce|Tom Fletcher|Verity Harding|Zeinab Badawi|Chris Anderson|Hannah Ritchie|Jacqueline Wilson|Marianne Brooker|Lara Pawson|Leah Cowan",
-  ca: "Christopher DiCarlo|Cory Doctorow|Dan Gardner|Dan Wang|David Miller|Deb Chachra|Dennis E. Taylor|Emily St. John Mandel|Gerard Seijts|Kimberley Young Milani|Lorna Gibson|Peter Attia|Philip Sohm|Shane Parrish|Susan Casey|Steven Pinker",
-  au: "Andrew N. Liveris|David A. Sinclair|James Allworth|Kevin Rudd|Roman Krznaric|Tim Minchin",
+  us: "Abraham Verghese|Adam Grant|Adia Harvey Wingfield|Admiral James Stavridis|Aerin Lauder|Agnes Callard|Alan Eagle|Alec Nevala-Lee|Alex Ellison|Alex Hanna|Alexander C. Karp|Alfred Fortunato|Alfred Lansing|Alison A. Armstrong|Amy C. Edmondson|Amy Griffin|Andrea Freeman|Andrew Ross Sorkin|Annabelle Tometich|Anne Curzan|Anne Fadiman|Anne Lamott|Arthur C. Brooks|Arthur Herman|Avriel Epps|Barbara Demick|Barbara Kingsolver|Ben Horowitz|Bernie Banks|Betsy Wills|Beverly Gage|Bill Gifford|Bill Perkins|Blair Kamin|Bonnie Garmus|Brandon Turner|Brian Potter|Brian Rosenberg|Brianna Wiest|Cal Newport|Calley Means|Carol S. Dweck|Casey Means|Charan Ranganath|Charles Duhigg|Charles Eisenstein|Cheryl McKissack Daniel|Chris Miller|Christine Yu|Christopher Kirchhoff|Clay Risen|Clayton M. Christensen|Connie Wang|Craig Mundie|Dan Heath|Dan Slepian|Dana Suskind|Daniel Dennett|Daniel Mendelsohn|Daniel Yergin|Danny Meyer|Dave Logan|David A. Mindell|David Brooks|David Epstein|David Leonhardt|David Moss|David Pogue|David Wallace-Wells|De Kai|Derek Thompson|Don Yaeger|Donna Tartt|Doris Kearns Goodwin|Douglas Hofstadter|Ed Ruscha|Edward Fishman|Elizabeth Strout|Elliot Ackerman|Elyse Graham|Emily Lakdawalla|Emily M. Bender|Eric Klinenberg|Eric Schmidt|Erik Larson|Erin Meyer|Ethan Mollick|Eva Dou|Evan Osnos|Everett Rogers|Ezra Klein|Fareed Zakaria|Fawn Weaver|Frances Lee|Francis J. Gavin|Francisco Jiménez|Gabrielle Zevin|Gary White|George Newman|George Saunders|Gerard K. O'Neill|Glenn Adamson|Grace Lindsay|Graham Allison|Graham Moore|Greg Shaw|Gregory M. Walton|Greta Caruso|Gretchen Heefner|Halee Fischer-Wright|Hanif Abdurraqib|Harry R. Lewis|Heather Cox Richardson|Henry A. Kissinger|Henry Kissinger|Herman Melville|Herminia Ibarra|Hernan Diaz|Ian Fletcher|Ian Wardropper|Ibram X. Kendi|Isaac Asimov|Isabel Wilkerson|J. Emmett Duffy|Jake Gyllenhaal|James L. Green|James Lawrence|James Patterson|James Rhee|Jason Rezaian|Jason Roberts|Jeffrey Rosen|Jennifer Breheny Wallace|Jenny Holzer|Jens Ludwig|Jill Lepore|Jill Tracie Nichols|Jim Collins|Jimmie James|Joanna Stern|Jodi Kantor|Joe Posnanski|Joel Stein|John Bradshaw|John Doerr|John King|John Sandford|John W. O'Malley|John Williams|Jon Pessah|Jonathan Haidt|Jonathan Rosenberg|Jonathan S. Blake|Josh Tyrangiel|Joshua Robinson|Julia Galef|Justin Farrell|Karen Cyphers|Karen Dillon|Karen Hao|Katherine M. Gehl|Keach Hagey|Keisha N. Blain|Kenneth Rogoff|Kevin Evers|Kurt Strovink|Kurt Vonnegut|Larry Warsh|Laura Mae Martin|Lauren Groff|Leah Boustan|Lena Dunham|Liaquat Ahamed|Lindy Elkins-Tanton|Lisa Dickey|Lisa Laskow Lahey|Liz Moore|Lloyd Blankfein|Lydia Millet|M. K. Asante|M. Scott Peck|Maia Kobabe|Marc Fasteau|Marc J. Dunkelman|Margaret A. Weitekamp|Marie Benedict|Marina Nitze|Marshall Ganz|Martha Wells|Mary Roach|Matt Damon|Matt Eversmann|Matt Mayberry|Matthew D. LaPlante|Matthew Desmond|Matthew Weaver|Max Bennett|Meghan O'Gieblyn|Melinda French Gates|Melissa Swift|Michael A. Singer|Michael E. Porter|Michael Easter|Michael Morris|Michael Petry|Michael Pettis|Michael S. Okun|Michael Schur|Mike Colias|Mikey Dickerson|Miranda July|Monica Wood|Morgan Housel|Morgan Radford|Mónica Guzmán|Natalie Foster|Nate DiMeo|Nathaniel Philbrick|Nicholas D. Kristof|Nicholas W. Zamiska|Nick Chiles|Nicole Perlroth|Nikki Giovanni|Nils Gilman|Oprah Winfrey|Parmy Olson|Patmeena Sabit|Patricia Faison Hewlin|Patrick Bringley|Patrick Lencioni|Patrick Radden Keefe|Percival Everett|Peter Rogers|Peter Zeihan|Priya Parker|Raj M. Shah|Randall K. Wilson|Ray Bradbury|Ray Dorsey|Ray Kurzweil|Rebecca Makkai|Ric Bucher|Richard E. Spear|Rick Atkinson|Rick Rubin|Rob Manning|Robert A. Caro|Robert Kegan|Ron Chernow|Roxanne Dunbar-Ortiz|Safi Bahcall|Sahil Bloom|Salman Khan|Sandeep Jauhar|Santi Elijah Holley|Sarah Kay|Satya Nadella|Scott Adams|Scott Anderson|Scott Keller|Scott Turow|Sheila Johnson|Sherman A. Jackson|Simone Stolzoff|Sloane Crosley|Stephen Cope|Stephen Macedo|Stephen Witt|Steven G. Rogelberg|Susan Leal|Susan Rabiner|Suzy Welch|Ta-Nehisi Coates|Tara Mohr|Theo Baker|Thomas Insel|Tina Knowles|Tracy Kidder|Valerie Bauerlein|Victoria Christopher Murray|Virginia Evans|Walt Hunter|Walter Isaacson|William Bridges|William Egginton|William Ury|Xochitl Gonzalez|Yulin Kuang|Zarna Garg|Zoë Schlanger|Bruce Holsinger|Theodore H. Schwartz|Katharine Graham|Tara Westover|Shelby Van Pelt|Barry Diller|Kristin Hannah|Grady Hillhouse|Taylor Jenkins Reid|Chloe Benjamin|Melinda Gates|Toni Morrison|Mark Divine|Ingrid Fetell Lee|Bryan Stevenson|Erin Morgenstern|Rebecca Skloot|Barry Werth|John Carreyrou|Phil Knight|Amor Towles|Peter F. Drucker|Siddhartha Mukherjee|Patrick Smith|Mel Robbins|David W. Blight|Michelle Obama|Mimi Baird|David Goggins|Kai Bird|Chris Hedges|Joe Sacco|Bradley Hope|Sigrid Nunez|Mahzarin R. Banaji|Anthony G. Greenwald|Richard Baldwin|Jamie Metzl|Alex Rosenberg|Octavia E. Butler|Arlie Russell Hochschild|Lisa Servon|S. C. Gwynne|Kenji Yoshino|Leonard Mlodinow|Richard Bach|Gary Keller|Jay Papasan|Daniel Coyle|Franklin Foer|Patricia Highsmith|Ray Dalio|Daniel H. Pink|Jaron Lanier|Richard Ben Cramer|Lawrence Wright|Scott Galloway|Kevin Kelly|Bruce Cumings|Madeline Miller|Andrew J. Bacevich|Robert F. Bruner|Sean D. Carr|Robert D. Kaplan|William H. Janeway|Michael Lewis|Anthony Doerr|Min Jin Lee|Sheryl WuDunn|Brad Stone|Deepak Chopra|Michael Meyer|John A. Farrell|Nancy Gibbs|Michael Duffy|Thomas L. Friedman|Steve Gullans|Paul Kalanithi|Wally Lamb|David McCullough|Dave Grob|Andrew W. Lo|Timothy Snyder|Robert Z. Aliber|Charles P. Kindleberger|William Krist|Amy Goldstein|Florence Williams|Glenn Greenwald|David Talbot|Ramez Naam|Angela Duckworth|Daniel James Brown|Charles Palliser|Paul Midler|Michael Herr|Peter Thiel|Blake Masters|Jared Diamond|Jennifer Keishin Armstrong|Leigh Stringer|Hanya Yanagihara|Nate Silver|Melvin L. Oliver|Thomas Shapiro|Yaa Gyasi|Charles C. Mann|J. D. Vance|Martin Ford|Alan Murray|Dale Carnegie|Dorothy Carnegie|Stephen King|Jeff Hobbs|Ben Bova|Peter L. Bernstein|R. Wayne Baughman|Neal Stephenson|Seth A. Klarman|James Grant|Edwin Lefèvre|Erik Brynjolfsson|Andrew McAfee|Benjamin Graham|David Dodd|Carmen M. Reinhart",
+  gb: "Adam Higginbotham|Adrian Tchaikovsky|Agatha Christie|Alex Perry|Andrew J. Scott|Chloe Dalton|Christopher Hibbert|Courtney Daniella Boateng|Dan Davies|Daniel Susskind|Dr Tommy Wood|Dr. Mandeep Rai|Elinor Cleghorn|Fay Weldon|Hallie Rubenhold|Helen Czerski|Hilary Cottam|Iain Banks|Ian McEwan|Issy von Simson|John Kay|Jonathan Clegg|Jonathan Coe|Kate Moore|Kate Smaje|Katrina Manson|Keith Thomas|Lionel Barber|Matt Haig|Matthew Parker|Matthew Walker|Melinda Stevens|Michael Bhaskar|Mustafa Suleyman|Niall Ferguson|Nick Hornby|Nigel Warburton|Oliver Burkeman|Renée Kapuku|Richard Holmes|Robert Harris|Robert Macfarlane|Roger Bennett|Roger Scruton|Ros Atkins|Samantha Harvey|Sebastian Mallaby|Simon Boas|Sophie Elmhirst|Stephen Bungay|Tabitha Joyce|Tom Fletcher|Verity Harding|Zeinab Badawi|Chris Anderson|Hannah Ritchie|Jacqueline Wilson|Marianne Brooker|Lara Pawson|Leah Cowan|Isabella Hammad|Paul Kennedy|Tim Shipman|Beryl Markham|Lynda Gratton|David Pilling|Bill Browder|Clare Rewcastle Brown|Tom Wright|Mike Berners-Lee|Andrew Marr|Jung Chang|Rob Minto|Johann Hari|Nicole Yershon|Judith Flanders|Tim Marshall|James A. Robinson|Adam Tooze|Anna Burns|Nick Bilton|Stephen Hawking|John Farndon|Joe Simpson|Paul Lever|Charlie English|Christopher Simon Sykes|George Orwell|Gideon Rachman|Helena Attlee|Joe Studwell|Julian Barnes|Jonathan Wilson|Martin Gilbert|Edward Chancellor|Peter Frankopan|Paul Johnson|Andrew Roberts|Aldous Huxley|Hilary Mantel|Thomas Hardy|Gillian Tett|Kazuo Ishiguro",
+  ca: "Christopher DiCarlo|Cory Doctorow|Dan Gardner|Dan Wang|David Miller|Deb Chachra|Dennis E. Taylor|Emily St. John Mandel|Gerard Seijts|Kimberley Young Milani|Lorna Gibson|Peter Attia|Philip Sohm|Shane Parrish|Susan Casey|Steven Pinker|Ajay Agrawal|Avi Goldfarb|Bruce Mau",
+  au: "Andrew N. Liveris|David A. Sinclair|James Allworth|Kevin Rudd|Roman Krznaric|Tim Minchin|Dr. Lea Waters|Christopher Clark|Joshua Gans",
   nz: "Eleanor Catton|Jacinda Ardern|Sarah Wynn-Williams",
   ie: "Aimee Donnellan|Sally Rooney|Tana French|Bono",
-  fr: "Alexis de Tocqueville|Annie Ernaux|Pierre Bourdieu|Victor Hugo",
-  de: "Christian Sellmann|Hans-Werner Kaas|Josef Brunner|Doris Henkel",
-  it: "Clementina Galli Zugaro|Emilio Galli Zugaro|Giuliano da Empoli",
-  ru: "Alexei Navalny|Arsen Tomsky|Ivan Turgenev|Leo Tolstoy|Vladislav Zubok",
-  at: "Joseph A. Schumpeter|Viktor E. Frankl",
+  fr: "Alexis de Tocqueville|Annie Ernaux|Pierre Bourdieu|Victor Hugo|Thomas Philippon|Véronique Olmi|Erik Orsenna|Irène Némirovsky",
+  de: "Christian Sellmann|Hans-Werner Kaas|Josef Brunner|Doris Henkel|Erich Maria Remarque|Sebastian Haffner|Ulrich Weinberg",
+  it: "Clementina Galli Zugaro|Emilio Galli Zugaro|Giuliano da Empoli|Elena Ferrante|Elena Favilli|Francesca Cavallo",
+  ru: "Alexei Navalny|Arsen Tomsky|Ivan Turgenev|Leo Tolstoy|Vladislav Zubok|Aleksandr Solzhenitsyn",
+  at: "Joseph A. Schumpeter|Viktor E. Frankl|Walter Scheidel",
   il: "Daniel Kahneman|Ilan Pappe|Yuval Noah Harari",
   nl: "Rutger Bregman|Sven Smit",
-  se: "Carl Benedikt Frey|Johan Roos|Johanna Ekström",
-  dk: "Bent Flyvbjerg",
-  no: "Odd Arne Westad",
+  se: "Carl Benedikt Frey|Johan Roos|Johanna Ekström|Hans Rosling|Fredrik Backman|Max Tegmark",
+  dk: "Bent Flyvbjerg|Dorthe Nors",
+  no: "Odd Arne Westad|Anders Indset",
   pl: "Olga Tokarczuk",
-  tr: "Elif Shafak",
+  tr: "Elif Shafak|Daron Acemoglu|Dani Rodrik",
   cl: "Benjamín Labatut|César Hidalgo",
-  mx: "Carissa Véliz|Yuri Herrera",
+  mx: "Carissa Véliz|Yuri Herrera|Juan Enriquez",
   br: "Paulo Coelho",
   jm: "Safiya Sinclair",
   tt: "Lesley-Ann Noel",
-  ng: "Femi Otedola",
+  ng: "Femi Otedola|Chimamanda Ngozi Adichie",
   za: "Phuthuma Nhleko|Trevor Noah",
   zw: "Peter Godwin",
   dz: "Kamel Daoud",
   mr: "Ahmed Fal al-Din",
-  lb: "Zahra Hankir",
-  in: "Pulak Prasad|Ruchir Sharma",
-  cn: "Chen Qiufan",
+  lb: "Zahra Hankir|Nassim Nicholas Taleb",
+  in: "Pulak Prasad|Ruchir Sharma|Vikram Seth|Amartya Sen",
+  cn: "Chen Qiufan|Liu Cixin",
   tw: "Kai-Fu Lee",
   kr: "Chung Ju-yung|Han Kang",
   jp: "Shigehiro Oishi|Takashi Shiraishi",
   sg: "Lee Kuan Yew",
-  ph: "Patricia Evangelista"
+  ph: "Patricia Evangelista",
+  es: "Héctor García|Francesc Miralles|Fernando Aramburu",
+  ch: "Rolf Dobelli",
+  ae: "Omar Saif Ghobash"
 };
 
 // The same book matches across lists when the title (before any colon) and the first author's surname agree.
@@ -700,8 +971,8 @@ const rows = LISTS.flatMap(l => l.books.map(([title, author, theme]) => {
 }));
 
 const $ = id => document.getElementById(id);
-const sources = [J,M,L,H,E,F,G];
-const SHORT = { [J]: "J.P. Morgan", [M]: "McKinsey", [L]: "LBS", [H]: "HBS", [E]: "LSE", [F]: "FT shortlist", [G]: "Gates Notes" };
+const sources = [J,M,S,B,L,H,E,F,G];
+const SHORT = { [J]: "J.P. Morgan", [M]: "McKinsey", [L]: "LBS", [H]: "HBS", [E]: "LSE", [F]: "FT shortlist", [G]: "Gates Notes", [S]: "Goldman Sachs", [B]: "BlackRock" };
 const years = [...new Set(LISTS.map(l => l.year))].sort((a,b) => b - a);
 const themes = [...new Set(rows.map(r=>r.theme))].sort();
 years.forEach(y => $("fyr").add(new Option(y, y)));
