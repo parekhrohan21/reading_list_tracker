@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Reading Lists Tracker</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='3' y='3' width='58' height='58' rx='14' fill='%231f5e57'/%3E%3Ctext x='32' y='42' text-anchor='middle' font-family='Georgia,serif' font-weight='700' font-size='28' fill='%23fff'%3ERP%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
@@ -46,6 +47,12 @@ html { scroll-padding-top: env(safe-area-inset-top, 0px); }
 [hidden]:not([hidden=until-found i]) { display: none !important; }
 body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 15px; line-height: 1.5; }
 .wrap { max-width: 1120px; margin: 0 auto; padding: 32px 20px 56px; display: grid; gap: 22px; }
+.topbar { display: flex; align-items: center; }
+.brand { display: inline-flex; align-items: center; gap: 10px; color: var(--muted); text-decoration: none; border-radius: 8px; }
+.brand-mark { width: 34px; height: 34px; display: grid; place-items: center; border: 1.5px solid var(--accent); border-radius: 8px; color: var(--accent); font-family: var(--font-display); font-weight: 600; font-size: 15px; letter-spacing: .03em; transition: background-color .15s, color .15s; }
+.brand-name { font-family: var(--font-mono); font-size: 12.5px; letter-spacing: .04em; transition: color .15s; }
+.brand:hover .brand-mark { background: var(--accent); color: var(--surface); }
+.brand:hover .brand-name { color: var(--ink); }
 header { display: grid; gap: 8px; }
 .eyebrow { font-family: var(--font-mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
 h1 { font-family: var(--font-display); font-weight: 600; font-size: clamp(28px, 4.5vw, 40px); line-height: 1.1; margin: 0; text-wrap: balance; }
@@ -102,6 +109,12 @@ footer b { color: var(--ink); font-weight: 500; font-family: var(--font-mono); }
 </head>
 <body>
 <div class="wrap">
+  <nav class="topbar" aria-label="Site">
+    <a class="brand" href="https://rohanparekh.uk" aria-label="Rohan Parekh – rohanparekh.uk">
+      <span class="brand-mark" aria-hidden="true">RP</span>
+      <span class="brand-name">rohanparekh.uk</span>
+    </a>
+  </nav>
   <header>
     <div class="eyebrow">Reading lists · 2015–2026</div>
     <h1>Reading Lists Tracker</h1>
